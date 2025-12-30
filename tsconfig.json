@@ -1,34 +1,11 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
-    "strict": true,
-    "baseUrl": ".",
-    "declaration": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "importHelpers": false,
-    "jsx": "react",
-    "lib": ["DOM", "DOM.Iterable", "esnext"],
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "rootDir": ".",
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strictNullChecks": true,
-    "target": "ESNext",
-    "types": ["node", "jest"],
-    "typeRoots": ["./node_modules/@types", "./node_modules/@dynatrace", "./node_modules"],
-    "paths": {
-      "@code-ui-lib/*": ["src/app/features/failure-analysis/components/code-ui-lib/*"],
-      "@features/*": ["src/app/features/*"],
-      "@shared/*": ["src/app/shared/*"],
-      "@services/*": ["src/app/services/*"],
-      "@state/*": ["src/app/state/*"],
-      "@route": ["src/Routing"]
-    }
+    "target": "ES2020", // Modern JavaScript features
+    "module": "CommonJS", // Node.js module system
+    "outDir": "./dist", // Output compiled files to the 'dist' folder
+    "rootDir": "./src", // Source files are in the 'src' folder
+    "strict": true, // Enable strict type checking
+    "esModuleInterop": true // Allow default imports from CommonJS modules
   },
-  "files": ["app.config.cts"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "exclude": ["test", "node_modules"]
 }
