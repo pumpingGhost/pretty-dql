@@ -16,7 +16,7 @@ export const processChar = (
     return;
   }
 
-  if (char === '"' || char === "'") {
+  if (char === '"' || char === "'" || char === '`') {
     state.quoteChar = char;
     state.current += char;
     return;

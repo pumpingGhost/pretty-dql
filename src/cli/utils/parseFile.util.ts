@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { extractDqlCommandLocations } from './extractDqlCommands.util';
 import { formatDql } from '../../formatting/format-dql';
+import { tokenizeByQuotes } from '../../formatting/tokenize-by-quotes';
 
 export function parseFile(filename: string, options?: { fix?: boolean }): void {
   const filePath = path.isAbsolute(filename) ? filename : path.resolve(process.cwd(), filename);
@@ -27,14 +28,24 @@ export function parseFile(filename: string, options?: { fix?: boolean }): void {
         const formatted = formatDql(cmd.dql);
 
         // We use backticks for the formatted string to support multi-line output
-        // Escape backticks to ensure valid template literal syntax
-        let escapedFormatted = formatted.replace(/`/g, '\\`');
+        let escapedFormatted: string;
 
-        // If the original string was NOT a backtick string (template literal),
-        // we must escape ${ to prevent it from being interpreted as an interpolation
-        // when we wrap it in backticks.
-        if (cmd.value[0] !== '`') {
-          escapedFormatted = escapedFormatted.replace(/\$\{/g, '\\${');
+        if (cmd.value[0] === '`') {
+          // Original was a template literal. We want to preserve interpolations.
+          // Only escape backticks that are NOT inside interpolations.
+          const segments = tokenizeByQuotes(formatted);
+          escapedFormatted = segments
+            .map((seg) => {
+              if (seg.startsWith('${')) {
+                return seg;
+              }
+              return seg.replace(/`/g, '\\`');
+            })
+            .join('');
+        } else {
+          // Original was NOT a template literal (e.g. single/double quotes).
+          // We must escape backticks AND ${ to prevent interpolation.
+          escapedFormatted = formatted.replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
         }
 
         const newRaw = `\`${escapedFormatted}\``;

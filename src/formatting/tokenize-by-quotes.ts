@@ -18,7 +18,7 @@ export const tokenizeByQuotes = (text: string): string[] => {
           quoteChar = '';
         }
       } else {
-        if (char === '"' || char === "'") {
+        if (char === '"' || char === "'" || char === '`') {
           quoteChar = char;
         } else if (char === '{') {
           braceDepth++;
@@ -55,7 +55,7 @@ export const tokenizeByQuotes = (text: string): string[] => {
       continue;
     }
 
-    if (char === '"' || char === "'") {
+    if (char === '"' || char === "'" || char === '`') {
       // We found a start of a quoted string, so we push the previous segment
       if (current) {
         segments.push(current);

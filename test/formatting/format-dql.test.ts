@@ -68,4 +68,10 @@ describe('formatDql', () => {
     const expected = 'fetch logs\n| filter { left[ dt.entity.service ] == right[ id ] }';
     expect(formatDql(input)).toBe(expected);
   });
+
+  it('should handle template variables with nested backticks', () => {
+    const input = 'timeseries {a=1}${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
+    const expected = 'timeseries { a=1 }${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
+    expect(formatDql(input)).toBe(expected);
+  });
 });
