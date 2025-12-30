@@ -3,7 +3,7 @@ import { handleColon } from './handle-colon';
 
 export const formatSegment = (seg: string): string => {
   // Skip formatting for quoted strings
-  if (seg.startsWith('"') || seg.startsWith("'")) {
+  if (seg.startsWith('"') || seg.startsWith("'") || seg.startsWith('$')) {
     return seg;
   }
 

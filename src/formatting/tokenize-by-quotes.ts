@@ -5,9 +5,35 @@ export const tokenizeByQuotes = (text: string): string[] => {
   const segments: string[] = [];
   let current = '';
   let quoteChar = '';
+  let inTemplateVar = false;
+  let braceDepth = 0;
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
+
+    if (inTemplateVar) {
+      current += char;
+      if (quoteChar) {
+        if (char === quoteChar && !isEscaped(text, i)) {
+          quoteChar = '';
+        }
+      } else {
+        if (char === '"' || char === "'") {
+          quoteChar = char;
+        } else if (char === '{') {
+          braceDepth++;
+        } else if (char === '}') {
+          braceDepth--;
+          if (braceDepth === 0) {
+            inTemplateVar = false;
+            segments.push(current);
+            current = '';
+          }
+        }
+      }
+      continue;
+    }
+
     if (quoteChar) {
       current += char;
       // Check if the current quote is closed and not escaped
@@ -16,6 +42,16 @@ export const tokenizeByQuotes = (text: string): string[] => {
         segments.push(current);
         current = '';
       }
+      continue;
+    }
+
+    if (char === '$' && text[i + 1] === '{') {
+      if (current) {
+        segments.push(current);
+        current = '';
+      }
+      inTemplateVar = true;
+      current += char;
       continue;
     }
 

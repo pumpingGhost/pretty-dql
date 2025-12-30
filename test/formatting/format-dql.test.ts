@@ -1,4 +1,4 @@
-import { formatDql } from '../../src/formatting/format-dql';
+import { formatDql } from '../../src';
 
 describe('formatDql', () => {
   it('should format a simple DQL query', () => {
@@ -54,6 +54,18 @@ describe('formatDql', () => {
   it('should handle URLs correctly', () => {
     const input = '| filter url == "http://example.com"';
     const expected = `| filter url == "http://example.com"`;
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should not format template string variables', () => {
+    const input = 'fetch logs | filter ${SemanticDictionaryConstants.ID} == "123"';
+    const expected = 'fetch logs\n| filter ${SemanticDictionaryConstants.ID} == "123"';
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should still format normal brackets', () => {
+    const input = 'fetch logs | filter {left[ dt.entity.service ] == right[ id ]}';
+    const expected = 'fetch logs\n| filter { left[ dt.entity.service ] == right[ id ] }';
     expect(formatDql(input)).toBe(expected);
   });
 });
