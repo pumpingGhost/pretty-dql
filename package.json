@@ -2,7 +2,7 @@
   "name": "pretty-dql",
   "version": "1.0.0",
   "description": "A DQL formatting library",
-  "main": "src/format-dql.ts",
+  "main": "src/formatting/format-dql.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint src/**/*.ts",

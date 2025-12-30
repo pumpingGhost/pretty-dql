@@ -1,4 +1,4 @@
-import { formatDql } from './format-dql';
+import { formatDql } from '../../src/formatting/format-dql';
 
 describe('formatDql', () => {
   it('should format a simple DQL query', () => {
