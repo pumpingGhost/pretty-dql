@@ -89,6 +89,6 @@ describe('dql-format CLI', () => {
 
     expect(result.status).toBe(0);
     const lines = result.stdout.trim().split(/\r?\n/);
-    expect(lines).toEqual(['dql-format: data from logs', 'dql-format: | filter status == 200']);
+    expect(lines).toEqual(['data from logs', '| filter status == 200']);
   });
 });
