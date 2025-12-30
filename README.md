@@ -29,8 +29,8 @@ A CLI tool to parse files and search for DQL commands to pass them to the DQL fo
 Build the project first so the CLI entrypoint is available in `dist` and then link it globally:
 
 ```bash
-npm run build
-npm link
+pnpm run build
+pnpm link
 ```
 
 After linking, you can use the `pretty-dql` command directly:
