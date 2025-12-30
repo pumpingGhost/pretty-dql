@@ -1,0 +1,91 @@
+export const createExcludedDbOperationsFilter = (includeDbQueryPrefixFilters: boolean) => {
+    const quotedOperations = EXCLUDED_DB_OPERATIONS.map((op) => `"${op}"`).join(', ');
+    const dbOperationFilter = `| filterOut in (${SemanticDictionaryConstants.DB_OPERATION_NAME}, { ${quotedOperations} })`;
+
+    if (!includeDbQueryPrefixFilters) return dbOperationFilter;
+
+    const startsWithFilters = EXCLUDED_DB_OPERATIONS.map(
+        (op) => `or startsWith(${SemanticDictionaryConstants.DB_QUERY_TEXT}, {"${op}"}, caseSensitive: false)`,
+    ).join('\n  ');
+
+    return `${dbOperationFilter}\n  ${startsWithFilters}`;
+};
+
+export const DB_QUERIES_FILTER_EXPRESSION = `span.kind == "client" and isNotNull(${SemanticDictionaryConstants.DB_SYSTEM})
+| fieldsAdd ${SemanticDictionaryConstants.DB_QUERY_TEXT} = coalesce(${SemanticDictionaryConstants.DB_QUERY_TEXT}, ${SemanticDictionaryConstants.DB_STATEMENT})
+| filter isNotNull(${SemanticDictionaryConstants.DB_QUERY_TEXT})
+${createExcludedDbOperationsFilter(true)}`;
+
+export const DB_QUERIES_FILTER = `
+| filter ${DB_QUERIES_FILTER_EXPRESSION}`;
+
+const DB_QUERIES_ENTITY_FILTER = `
+| filter ${SemanticDictionaryConstants.DT_ENTITY_SERVICE} == $(entityId)`;
+
+const FIELDS_ADD_ENTITY_NAME = `
+| fieldsAdd entityName(dt.entity.service)`;
+
+export const DB_QUERIES_DQL_QUERY_ADDITIONAL_COMMAND = `
+| fieldsAdd failed = if(span.status_code == "error" or isNotNull(error.type) or iAny(span.events[][span_event.name]=="exception"), samplingMultiplicity, else: 0)
+| fieldsAdd failed = if(aggregation.exception_count > 0, failed * aggregation.exception_count, else: failed)
+
+| summarize {
+  queryCount = sum(samplingMultiplicity * aggregationMultiplicity),
+  errorCount = sum(failed),
+  cumulativeDuration = sum(samplingMultiplicity * aggregationDuration)
+}, by: { ${GROUPING_FIELDS.join(', ')} }
+
+${SERVICE_NAME_WITH_ICON}
+
+| fields
+  entity,
+  queryCount = toLong(queryCount),
+  errorCount = toLong(errorCount),
+  ${SemanticDictionaryConstants.DT_ENTITY_SERVICE}.name,
+  ${SemanticDictionaryConstants.DT_ENTITY_SERVICE},
+  ${SemanticDictionaryConstants.DB_SYSTEM},
+  ${SemanticDictionaryConstants.DB_QUERY_TEXT},
+  ${SemanticDictionaryConstants.DB_NAMESPACE},
+  id = ${getHashedUidField(...GROUPING_FIELDS)},
+  queryDuration = cumulativeDuration / queryCount,
+  cumulativeDuration
+| limit 1010`;
+
+export const createGlobalDbQueriesDqlQuery = () => {
+    return (
+        `fetch spans, scanLimitGBytes: if($(samplingRatio) > 1, then: 50, else: 500), samplingRatio: $(samplingRatio)` +
+        DB_QUERIES_FILTER +
+        DQL_SAMPLING_FIELDS +
+        FIELDS_ADD_ENTITY_NAME
+    );
+};
+
+export const createServiceDetailsDbQueriesDqlQuery = () => {
+    return (
+        `fetch spans, scanLimitGBytes: if($(samplingRatio) > 1, then: 50, else: 500), samplingRatio: $(samplingRatio)` +
+        DB_QUERIES_ENTITY_FILTER +
+        DB_QUERIES_FILTER +
+        DQL_SAMPLING_FIELDS +
+        FIELDS_ADD_ENTITY_NAME +
+        DB_QUERIES_DQL_QUERY_ADDITIONAL_COMMAND
+    );
+};
+
+export const getDbQueriesFilterExpressionForEntity = (entityId: string) =>
+    `${SemanticDictionaryConstants.DT_ENTITY_SERVICE} == "${entityId}"
+| filter ${DB_QUERIES_FILTER_EXPRESSION}`;
+
+export const GLOBAL_DB_FILTER_LOOKUP: string = `
+| lookup [
+    fetch spans, scanLimitGBytes: 50, samplingRatio: 100
+    ${DB_QUERIES_FILTER}
+    | fieldsAdd
+        rowId = ${getHashedUidField(...GROUPING_FIELDS)},
+        entityName(${SemanticDictionaryConstants.DT_ENTITY_SERVICE})
+], sourceField:id, lookupField:dt.entity.service, fields:{ rowId,
+    ${SemanticDictionaryConstants.DT_ENTITY_SERVICE},
+    ${SemanticDictionaryConstants.DT_ENTITY_SERVICE}.name,
+    ${SemanticDictionaryConstants.DB_SYSTEM},
+    ${SemanticDictionaryConstants.DB_QUERY_TEXT},
+    ${SemanticDictionaryConstants.DB_NAMESPACE}
+}, executionOrder:leftFirst`;
