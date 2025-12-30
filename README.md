@@ -25,24 +25,24 @@ console.log(formatted);
 ### Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Run Tests
 
 ```bash
-npm test
+pnpm test
 ```
 
 ### Linting
 
 ```bash
-npm run lint
+pnpm run lint
 ```
 
 ### Formatting
 
 ```bash
-npm run format
+pnpm run format
 ```
 

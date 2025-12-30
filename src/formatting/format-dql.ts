@@ -8,10 +8,10 @@ import { formatCommand } from './format-command';
  * @returns The formatted DQL query string.
  */
 export const formatDql = (dql: string): string => {
-    // Split the DQL query by the pipe character to separate commands
-    const commands = splitByDelimiter(dql, '|');
-    return commands
-        .map((cmd, index) => formatCommand(cmd, index))
-        .filter((p) => p.length > 0)
-        .join('\n');
+  // Split the DQL query by the pipe character to separate commands
+  const commands = splitByDelimiter(dql, '|');
+  return commands
+    .map((cmd, index) => formatCommand(cmd, index))
+    .filter((p) => p.length > 0)
+    .join('\n');
 };
