@@ -46,15 +46,14 @@ describe('formatDql', () => {
   });
 
   it('should handle nested brackets', () => {
-      const input = '| fields [nested [brackets]]';
-      const expected = `| fields [ nested [ brackets ] ]`;
-      expect(formatDql(input)).toBe(expected);
+    const input = '| fields [nested [brackets]]';
+    const expected = `| fields [ nested [ brackets ] ]`;
+    expect(formatDql(input)).toBe(expected);
   });
 
   it('should handle URLs correctly', () => {
-      const input = '| filter url == "http://example.com"';
-      const expected = `| filter url == "http://example.com"`;
-      expect(formatDql(input)).toBe(expected);
+    const input = '| filter url == "http://example.com"';
+    const expected = `| filter url == "http://example.com"`;
+    expect(formatDql(input)).toBe(expected);
   });
 });
-
