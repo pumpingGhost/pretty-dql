@@ -1,6 +1,12 @@
+export interface StringLocation {
+  value: string;
+  start: number;
+  end: number;
+}
+
 // Extract all string literals (single, double, and template) from given content
-export function extractStrings(content: string): string[] {
-  const results: string[] = [];
+export function extractStringLocations(content: string): StringLocation[] {
+  const results: StringLocation[] = [];
   let i = 0;
   const len = content.length;
 
@@ -9,6 +15,7 @@ export function extractStrings(content: string): string[] {
 
     // Handle normal string literals
     if (ch === '"' || ch === "'") {
+      const start = i;
       const quote = ch;
       let value = quote;
       i++;
@@ -24,7 +31,7 @@ export function extractStrings(content: string): string[] {
           escaped = true;
         } else if (c === quote) {
           // end of string
-          results.push(value);
+          results.push({ value, start, end: i + 1 });
           i++;
           break;
         }
@@ -36,6 +43,7 @@ export function extractStrings(content: string): string[] {
 
     // Handle template literals (basic support, including simple escapes and ${} blocks)
     if (ch === '`') {
+      const start = i;
       let value = '`';
       i++;
       let escaped = false;
@@ -84,7 +92,7 @@ export function extractStrings(content: string): string[] {
 
         if (c === '`') {
           // end of template literal
-          results.push(value);
+          results.push({ value, start, end: i + 1 });
           i++;
           break;
         }
@@ -98,4 +106,8 @@ export function extractStrings(content: string): string[] {
   }
 
   return results;
+}
+
+export function extractStrings(content: string): string[] {
+  return extractStringLocations(content).map((loc) => loc.value);
 }

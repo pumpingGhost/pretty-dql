@@ -48,7 +48,7 @@ describe('dql-format CLI', () => {
     expect(result.stdout.trim()).toBe('');
   });
 
-  test.skip('prints each DQL command on its own line', () => {
+  test('prints each DQL command on its own line', () => {
     const tmpFile = path.join(__dirname, 'tmp-with-dql.txt');
     const content = ['const q1 = "data from logs";', 'const q2 = "| filter status == 200";'].join('\n');
     fs.writeFileSync(tmpFile, content);
@@ -90,5 +90,23 @@ describe('dql-format CLI', () => {
     expect(result.status).toBe(0);
     const lines = result.stdout.trim().split(/\r?\n/);
     expect(lines).toEqual(['data from logs', '| filter status == 200']);
+  });
+
+  test('replaces DQL strings with formatted versions when --fix is provided', () => {
+    const tmpFile = path.join(__dirname, 'tmp-fix.ts');
+    const originalContent = 'const q = "fetch logs | filter status == 200";';
+    fs.writeFileSync(tmpFile, originalContent);
+
+    const result = spawnSync(nodeBin, [cliPath, tmpFile, '--fix'], { encoding: 'utf-8' });
+
+    const newContent = fs.readFileSync(tmpFile, 'utf-8');
+    fs.unlinkSync(tmpFile);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain(`Fixed ${tmpFile}`);
+    // Expect backticks and formatted content (assuming formatDql adds newlines)
+    // The exact formatting depends on formatDql implementation.
+    // Based on format-dql.ts, it joins with \n.
+    expect(newContent).toContain('const q = `fetch logs\n| filter status == 200`;');
   });
 });

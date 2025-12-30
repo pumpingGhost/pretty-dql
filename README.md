@@ -36,7 +36,7 @@ pnpm link
 After linking, you can use the `pretty-dql` command directly:
 
 ```bash
-pretty-dql <path...> [--ext=.ts,.tsx]
+pretty-dql <path...> [--ext=.ts,.tsx] [--fix]
 ```
 
 Where `<path...>` can be one or more:
@@ -59,6 +59,8 @@ list of extensions (with or without the leading dot). Examples:
 - `--ext=.ts` – only `.ts` files
 - `--ext=.ts,.tsx` – `.ts` and `.tsx` files
 - `--ext=ts,tsx` – same as above; dots are added automatically
+
+You can also use the `--fix` flag to automatically replace the DQL strings in the files with the formatted versions.
 
 For every matching file, the tool:
 
@@ -107,6 +109,12 @@ Restrict to specific extensions:
 
 ```bash
 pretty-dql src --ext=.ts,.tsx
+```
+
+Fix DQL strings in files:
+
+```bash
+pretty-dql src --fix
 ```
 
 Format raw DQL strings:
@@ -160,4 +168,3 @@ pnpm run lint
 ```bash
 pnpm run format
 ```
-

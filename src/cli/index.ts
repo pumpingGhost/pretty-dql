@@ -43,6 +43,7 @@ if (require.main === module) {
   // Simple flag parsing for --ext=.ts,.tsx and positional paths
   const extensions: string[] = [];
   const paths: string[] = [];
+  let fix = false;
 
   for (const arg of argv) {
     if (arg.startsWith('--ext=')) {
@@ -55,13 +56,15 @@ if (require.main === module) {
           }
         });
       }
+    } else if (arg === '--fix') {
+      fix = true;
     } else {
       paths.push(arg);
     }
   }
 
   if (paths.length === 0) {
-    console.error('Usage: dql-format <filename> [--ext=.ts,.tsx]');
+    console.error('Usage: dql-format <filename> [--ext=.ts,.tsx] [--fix]');
     process.exit(1);
   }
 
@@ -77,7 +80,7 @@ if (require.main === module) {
 
     for (const file of files) {
       // collectTargetFiles returns absolute paths; parseFile can now handle them directly
-      parseFile(file);
+      parseFile(file, { fix });
     }
   } catch (err) {
     if (err instanceof Error) {
