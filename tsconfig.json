@@ -5,7 +5,8 @@
     "outDir": "./dist", // Output compiled files to the 'dist' folder
     "rootDir": "./src", // Source files are in the 'src' folder
     "strict": true, // Enable strict type checking
+    "declaration": true, // Generate declaration files
     "esModuleInterop": true // Allow default imports from CommonJS modules
   },
-  "exclude": ["test", "node_modules"]
+  "exclude": ["test", "node_modules", "dist"]
 }
