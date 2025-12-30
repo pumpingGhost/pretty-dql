@@ -12,11 +12,7 @@ export function extractDqlCommands(content: string): string[] {
     const last = raw[raw.length - 1];
     let s = raw;
 
-    if (
-      (first === '"' && last === '"') ||
-      (first === "'" && last === "'") ||
-      (first === '`' && last === '`')
-    ) {
+    if ((first === '"' && last === '"') || (first === "'" && last === "'") || (first === '`' && last === '`')) {
       s = raw.substring(1, raw.length - 1);
     }
     return s;

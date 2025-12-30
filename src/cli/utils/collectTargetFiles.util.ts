@@ -8,10 +8,7 @@ export interface CollectTargetFilesOptions {
 
 const defaultExtensions = ['.txt', '.dql', '.js', '.jsx', '.ts', '.tsx'];
 
-export function collectTargetFiles(
-  inputPaths: string[],
-  options: CollectTargetFilesOptions = {},
-): string[] {
+export function collectTargetFiles(inputPaths: string[], options: CollectTargetFilesOptions = {}): string[] {
   const exts = options.extensions && options.extensions.length > 0 ? options.extensions : defaultExtensions;
   const recursive = options.recursive !== false; // default true
 
@@ -38,12 +35,7 @@ export function collectTargetFiles(
   return Array.from(files).sort();
 }
 
-function collectFromDirectory(
-  dirPath: string,
-  extensions: string[],
-  recursive: boolean,
-  files: Set<string>,
-): void {
+function collectFromDirectory(dirPath: string, extensions: string[], recursive: boolean, files: Set<string>): void {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -60,4 +52,3 @@ function collectFromDirectory(
     }
   }
 }
-
