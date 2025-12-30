@@ -2,10 +2,14 @@
   "name": "pretty-dql",
   "version": "1.0.0",
   "description": "Standardized styling and formatting for string-based DQL queries ??",
-  "main": "src/cli/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "pretty-dql": "./dist/cli/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest",
