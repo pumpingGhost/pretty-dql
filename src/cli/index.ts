@@ -2,8 +2,8 @@
 
 import { parseFile } from './utils/parseFile.util';
 import { collectTargetFiles } from './utils/collectTargetFiles.util';
-import { formatDqlCommand } from './utils/formatDqlCommand.util';
 import { isDqlContent } from './utils/isDqlContent.util';
+import { formatDql } from '../formatting/format-dql';
 
 // CLI Entry Point - only execute when run directly, not when imported as a module
 if (require.main === module) {
@@ -31,7 +31,7 @@ if (require.main === module) {
         }
       }
 
-      const formatted = formatDqlCommand(s);
+      const formatted = formatDql(s);
       if (formatted) {
         console.log(formatted);
       }

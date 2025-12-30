@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const nodeBin = process.execPath;
-const cliPath = path.resolve(__dirname, '..', 'dist', 'index.js');
+const cliPath = path.resolve(__dirname, '../../dist/cli/index.js');
 
 describe('dql-format CLI', () => {
   test('prints usage and exits with code 1 when no args provided', () => {
@@ -50,9 +50,7 @@ describe('dql-format CLI', () => {
 
   test.skip('prints each DQL command on its own line', () => {
     const tmpFile = path.join(__dirname, 'tmp-with-dql.txt');
-    const content = ['const q1 = "data from logs";', 'const q2 = "| filter status == 200";'].join(
-      '\n',
-    );
+    const content = ['const q1 = "data from logs";', 'const q2 = "| filter status == 200";'].join('\n');
     fs.writeFileSync(tmpFile, content);
 
     const result = spawnSync(nodeBin, [cliPath, tmpFile], { encoding: 'utf-8' });
@@ -85,23 +83,12 @@ describe('dql-format CLI', () => {
   });
 
   test('formats raw DQL strings with --raw and skips non-DQL', () => {
-    const result = spawnSync(
-      nodeBin,
-      [
-        cliPath,
-        '--raw',
-        'data from logs',
-        '| filter status == 200',
-        'not dql',
-      ],
-      { encoding: 'utf-8' },
-    );
+    const result = spawnSync(nodeBin, [cliPath, '--raw', 'data from logs', '| filter status == 200', 'not dql'], {
+      encoding: 'utf-8',
+    });
 
     expect(result.status).toBe(0);
     const lines = result.stdout.trim().split(/\r?\n/);
-    expect(lines).toEqual([
-      'dql-format: data from logs',
-      'dql-format: | filter status == 200',
-    ]);
+    expect(lines).toEqual(['dql-format: data from logs', 'dql-format: | filter status == 200']);
   });
 });

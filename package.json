@@ -24,7 +24,6 @@
     "Johannes Krahofer"
   ],
   "license": "MIT",
-  "type": "module",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^20.19.27",
