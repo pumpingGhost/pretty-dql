@@ -33,10 +33,10 @@ npm run build
 npm link
 ```
 
-After linking, you can use the `dql-format` command directly:
+After linking, you can use the `pretty-dql` command directly:
 
 ```bash
-dql-format <path...> [--ext=.ts,.tsx]
+pretty-dql <path...> [--ext=.ts,.tsx]
 ```
 
 Where `<path...>` can be one or more:
@@ -71,7 +71,7 @@ For every matching file, the tool:
 You can also format raw DQL strings directly, without reading from files, using the `--raw` flag:
 
 ```bash
-dql-format --raw "data from logs" "| filter status == 200"
+pretty-dql --raw "data from logs" "| filter status == 200"
 ```
 
 In this mode, each argument after `--raw` is treated as a DQL command string and passed directly to
@@ -82,37 +82,37 @@ In this mode, each argument after `--raw` is treated as a DQL command string and
 Parse a single file:
 
 ```bash
-dql-format examples/sample.ts
+pretty-dql examples/sample.ts
 ```
 
 Parse multiple files:
 
 ```bash
-dql-format src/file1.ts src/file2.ts tests/sample.txt
+pretty-dql src/file1.ts src/file2.ts tests/sample.txt
 ```
 
 Parse an entire directory (recursively):
 
 ```bash
-dql-format src
+pretty-dql src
 ```
 
 Mix files and directories:
 
 ```bash
-dql-format src tests some-other-file.dql
+pretty-dql src tests some-other-file.dql
 ```
 
 Restrict to specific extensions:
 
 ```bash
-dql-format src --ext=.ts,.tsx
+pretty-dql src --ext=.ts,.tsx
 ```
 
 Format raw DQL strings:
 
 ```bash
-dql-format --raw "data from logs" "| filter status == 200"
+pretty-dql --raw "data from logs" "| filter status == 200"
 ```
 
 #### Exit codes
@@ -135,6 +135,12 @@ The CLI uses the following exit codes:
 
 ```bash
 pnpm install
+```
+
+### Build
+
+```bash
+pnpm run build
 ```
 
 ### Run Tests

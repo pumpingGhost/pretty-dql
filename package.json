@@ -2,18 +2,27 @@
   "name": "pretty-dql",
   "version": "1.0.0",
   "description": "Standardized styling and formatting for string-based DQL queries ??",
-  "main": "src/formatting/format-dql.ts",
+  "main": "src/cli/index.ts",
+  "bin": {
+    "pretty-dql": "./dist/cli/index.js"
+  },
   "scripts": {
+    "build": "tsc",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts"
   },
   "keywords": [
     "dql",
+    "format",
     "formatter",
+    "pretty",
     "prettier"
   ],
   "author": "Felix Neustifter",
+  "contributors": [
+    "Johannes Krahofer"
+  ],
   "license": "MIT",
   "type": "module",
   "devDependencies": {
