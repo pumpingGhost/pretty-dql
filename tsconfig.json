@@ -1,0 +1,34 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": false,
+    "jsx": "react",
+    "lib": ["DOM", "DOM.Iterable", "esnext"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "ESNext",
+    "types": ["node", "jest"],
+    "typeRoots": ["./node_modules/@types", "./node_modules/@dynatrace", "./node_modules"],
+    "paths": {
+      "@code-ui-lib/*": ["src/app/features/failure-analysis/components/code-ui-lib/*"],
+      "@features/*": ["src/app/features/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@services/*": ["src/app/services/*"],
+      "@state/*": ["src/app/state/*"],
+      "@route": ["src/Routing"]
+    }
+  },
+  "files": ["app.config.cts"],
+  "include": ["**/*.ts", "**/*.tsx"]
+}

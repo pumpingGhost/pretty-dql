@@ -1,0 +1,59 @@
+# CLI files
+.dt-app
+
+# Compiled output
+/dist
+/build
+/tmp
+/out
+
+# Dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+*.iml
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+
+# IDE - VSCode
+/.vscode/*
+!/.vscode/settings.json
+!/.vscode/tasks.json
+!/.vscode/launch.json
+!/.vscode/extensions.json
+
+# IDE - vim & emacs
+tags
+errors.err
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Env file
+.env
+
+# Playwright
+/playwright
+playwright-report/
+test-results/
+blob-report/
+/playwright/.cache/
+playwright-tests.log
+/ui-tests/results.xml
+
+# Yalc
+.yalc
+yalc.lock
+
+# Temp Changelog
+TEMP_CHANGELOG.md
+
+# Coverage reports
+reports/
