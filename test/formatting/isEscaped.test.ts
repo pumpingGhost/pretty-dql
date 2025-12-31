@@ -1,4 +1,4 @@
-import { isEscaped } from '../../src/formatting/is-escaped';
+import { isEscaped } from '../../src/formatting/isEscaped';
 
 describe('isEscaped', () => {
   it('should return false if character is not escaped', () => {

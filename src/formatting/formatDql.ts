@@ -1,5 +1,5 @@
-import { splitByDelimiter } from './split-by-delimiter';
-import { formatCommand } from './format-command';
+import { splitByDelimiter } from './splitByDelimiter';
+import { formatCommand } from './formatCommand';
 
 /**
  * Formats a DQL query string and fixes basic syntax errors.

@@ -3,7 +3,7 @@
 import { parseFile } from './parseFile.util';
 import { collectTargetFiles } from './collectTargetFiles.util';
 import { isDqlContent } from './isDqlContent.util';
-import { formatDql } from '../formatting/format-dql';
+import { formatDql } from '../formatting/formatDql';
 
 // CLI Entry Point - only execute when run directly, not when imported as a module
 if (require.main === module) {

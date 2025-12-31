@@ -1,4 +1,4 @@
-import { handleBracket } from '../../src/formatting/handle-bracket';
+import { handleBracket } from '../../src/formatting/handleBracket';
 
 describe('handleBracket', () => {
   it('should add space inside brackets', () => {

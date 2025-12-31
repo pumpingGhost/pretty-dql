@@ -1,5 +1,5 @@
-import { handleColon } from './handle-colon';
-import { isEscaped } from './is-escaped';
+import { handleColon } from './handleColon';
+import { isEscaped } from './isEscaped';
 import { DQL_ROOT_COMMANDS } from '../constants/dqlRootCommands.constant';
 
 export const formatSegment = (seg: string): string => {

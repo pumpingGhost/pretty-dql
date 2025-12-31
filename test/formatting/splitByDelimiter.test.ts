@@ -1,4 +1,4 @@
-import { splitByDelimiter } from '../../src/formatting/split-by-delimiter';
+import { splitByDelimiter } from '../../src/formatting/splitByDelimiter';
 
 describe('splitByDelimiter', () => {
   it('should split by delimiter', () => {

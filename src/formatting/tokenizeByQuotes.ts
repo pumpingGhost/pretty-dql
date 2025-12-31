@@ -1,4 +1,4 @@
-import { isEscaped } from './is-escaped';
+import { isEscaped } from './isEscaped';
 
 export const tokenizeByQuotes = (text: string): string[] => {
   // We want to split the text into segments, keeping quoted strings intact

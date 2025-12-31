@@ -1,4 +1,4 @@
-import { formatCommand } from '../../src/formatting/format-command';
+import { formatCommand } from '../../src/formatting/formatCommand';
 
 describe('formatCommand', () => {
   it('should format command with arguments', () => {

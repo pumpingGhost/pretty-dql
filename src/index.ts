@@ -1,1 +1,1 @@
-export { formatDql } from './formatting/format-dql';
+export { formatDql } from './formatting/formatDql';

@@ -1,4 +1,4 @@
-import { formatSegment } from '../../src/formatting/format-segment';
+import { formatSegment } from '../../src/formatting/formatSegment';
 
 describe('formatSegment', () => {
   it('should format brackets', () => {

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const nodeBin = process.execPath;
-const cliPath = path.resolve(__dirname, '../../dist/cli/index.js');
+const cliPath = path.resolve(__dirname, '../../dist/cli/cli.js');
 
 describe('dql-format CLI', () => {
   test('prints usage and exits with code 1 when no args provided', () => {

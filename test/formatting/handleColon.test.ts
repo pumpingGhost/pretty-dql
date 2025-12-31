@@ -1,4 +1,4 @@
-import { handleColon } from '../../src/formatting/handle-colon';
+import { handleColon } from '../../src/formatting/handleColon';
 
 describe('handleColon', () => {
   it('should add space after colon', () => {

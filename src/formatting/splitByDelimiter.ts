@@ -1,4 +1,4 @@
-import { processChar } from './process-char';
+import { processChar } from './processChar';
 
 export const splitByDelimiter = (str: string, delimiter: string): string[] => {
   // Initialize the state for splitting the string by a delimiter

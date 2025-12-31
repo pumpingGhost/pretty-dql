@@ -1,4 +1,4 @@
-import { applyFormattingToCode } from '../../src/formatting/apply-formatting-to-code';
+import { applyFormattingToCode } from '../../src/formatting/applyFormattingToCode';
 
 describe('applyFormattingToCode', () => {
   it('should format code segments', () => {

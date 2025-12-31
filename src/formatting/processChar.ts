@@ -1,4 +1,4 @@
-import { isEscaped } from './is-escaped';
+import { isEscaped } from './isEscaped';
 
 export const processChar = (
   char: string,

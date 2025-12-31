@@ -1,4 +1,4 @@
-import { processChar } from '../../src/formatting/process-char';
+import { processChar } from '../../src/formatting/processChar';
 
 describe('processChar', () => {
   it('should add char to current if not delimiter', () => {
