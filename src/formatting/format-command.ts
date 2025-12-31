@@ -27,9 +27,12 @@ export const formatCommand = (cmdStr: string, index: number): string => {
 
   if (formattedArgs.length > 1 && (index > 0 || !isRootCommand)) {
     // Indent the arguments if there are multiple and it's not the first command
-    const indent = '  ';
-    const joinedArgs = formattedArgs.map((arg) => arg.replace(/\n/g, '\n' + indent)).join(',\n' + indent);
-    return prefix + commandName + '\n' + indent + joinedArgs;
+    // New rule: first argument on same line, subsequent arguments indented to align with first argument
+    const indentLength = prefix.length + commandName.length + 1;
+    const indent = ' '.repeat(indentLength);
+
+    const processedArgs = formattedArgs.map((arg) => arg.replace(/\n/g, '\n' + indent));
+    return prefix + commandName + ' ' + processedArgs.join(',\n' + indent);
   } else {
     const joinedArgs = formattedArgs.join(', ');
     return prefix + commandName + (joinedArgs ? ' ' + joinedArgs : '');

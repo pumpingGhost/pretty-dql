@@ -14,6 +14,7 @@ A simple and efficient DQL (Dynatrace Query Language) formatter.
 - Ensures commas are followed by a space if not followed by a newline.
 - Formats multiple arguments inside brackets `[]` and `{}` on new lines with indentation, unless it's a subquery.
 - Preserves template string variables `${...}` without formatting.
+- Aligns subsequent arguments of a command with the first argument, which is kept on the same line as the command.
 
 ## Usage
 

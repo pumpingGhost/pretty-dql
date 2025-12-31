@@ -3,10 +3,9 @@ import { formatDql } from '../../src';
 describe('formatDql', () => {
   it('should format a simple DQL query', () => {
     const input = '| fields entity, queryCount = toLong(queryCount), errorCount = toLong(errorCount)';
-    const expected = `| fields
-  entity,
-  queryCount = toLong(queryCount),
-  errorCount = toLong(errorCount)`;
+    const expected = `| fields entity,
+         queryCount = toLong(queryCount),
+         errorCount = toLong(errorCount)`;
     expect(formatDql(input)).toBe(expected);
   });
 
@@ -19,17 +18,15 @@ describe('formatDql', () => {
 
   it('should handle brackets correctly', () => {
     const input = '| fields [entity], {queryCount}';
-    const expected = `| fields
-  [ entity ],
-  { queryCount }`;
+    const expected = `| fields [ entity ],
+         { queryCount }`;
     expect(formatDql(input)).toBe(expected);
   });
 
   it('should handle colons correctly', () => {
     const input = '| summarize count(), by:{entity}';
-    const expected = `| summarize
-  count(),
-  by: { entity }`;
+    const expected = `| summarize count(),
+            by: { entity }`;
     expect(formatDql(input)).toBe(expected);
   });
 
@@ -72,6 +69,14 @@ describe('formatDql', () => {
   it('should handle template variables with nested backticks', () => {
     const input = 'timeseries {a=1}${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
     const expected = 'timeseries { a=1 }${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should align arguments with the first argument', () => {
+    const input = '| fields a, b, c';
+    const expected = `| fields a,
+         b,
+         c`;
     expect(formatDql(input)).toBe(expected);
   });
 });
