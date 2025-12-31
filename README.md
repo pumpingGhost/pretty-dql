@@ -26,17 +26,42 @@ A CLI tool to parse files and search for DQL commands to pass them to the DQL fo
 
 ### Usage
 
-Build the project first so the CLI entrypoint is available in `dist` and then link it globally:
+Build the project first so the CLI entrypoint is available in `dist`:
 
 ```bash
-pnpm run build
+pnpm build
+```
+
+Then you can link it globally to use the `pretty-dql` command:
+
+```bash
 pnpm link
 ```
 
 After linking, you can use the `pretty-dql` command directly:
-
 ```bash
 pretty-dql <path...> [--ext=.ts,.tsx] [--fix]
+```
+
+Alternatively, you can execute the module locally using `npx` without linking:
+```bash
+npx . <path...> [--ext=.ts,.tsx] [--fix]
+```
+
+If you add the library to another module, you can add it as a script to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "pretty-dql": "pretty-dql"
+  }
+}
+```
+
+Then run it via:
+
+```bash
+npm/pnpm run pretty-dql -- <path...> [--ext=.ts,.tsx] [--fix]
 ```
 
 Where `<path...>` can be one or more:
