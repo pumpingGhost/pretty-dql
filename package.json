@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "pretty-dql": "./dist/cli/index.js"
+    "pretty-dql": "./dist/cli/cli.js"
   },
   "files": [
     "dist"
