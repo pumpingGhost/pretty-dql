@@ -9,6 +9,11 @@ A simple and efficient DQL (Dynatrace Query Language) formatter.
 - Enforces spacing rules for brackets `[]`, `{}` and colons `:`.
 - Splits commands starting with `|` into new lines.
 - Aligns arguments for better readability.
+- Aligns closing curly brackets with the beginning of the word preceding the opening bracket for multiline blocks.
+- Keeps top-level root commands (like `fetch`) single-line if possible.
+- Ensures commas are followed by a space if not followed by a newline.
+- Formats multiple arguments inside brackets `[]` and `{}` on new lines with indentation, unless it's a subquery.
+- Preserves template string variables `${...}` without formatting.
 
 ## Usage
 

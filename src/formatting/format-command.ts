@@ -1,5 +1,6 @@
 import { splitByDelimiter } from './split-by-delimiter';
 import { applyFormattingToCode } from './apply-formatting-to-code';
+import { DQL_ROOT_COMMANDS } from '../cli/constants/dqlRootCommands.constant';
 
 export const formatCommand = (cmdStr: string, index: number): string => {
   const p = cmdStr.trim();
@@ -22,10 +23,12 @@ export const formatCommand = (cmdStr: string, index: number): string => {
   const args = splitByDelimiter(argsStr, ',');
   const formattedArgs = args.map((arg) => applyFormattingToCode(arg).trim());
 
-  if (formattedArgs.length > 1) {
-    // Indent the arguments if there are multiple
-    const indent = index > 0 ? '  ' : '';
-    const joinedArgs = formattedArgs.join(',\n' + indent);
+  const isRootCommand = DQL_ROOT_COMMANDS.includes(commandName);
+
+  if (formattedArgs.length > 1 && (index > 0 || !isRootCommand)) {
+    // Indent the arguments if there are multiple and it's not the first command
+    const indent = '  ';
+    const joinedArgs = formattedArgs.map((arg) => arg.replace(/\n/g, '\n' + indent)).join(',\n' + indent);
     return prefix + commandName + '\n' + indent + joinedArgs;
   } else {
     const joinedArgs = formattedArgs.join(', ');
