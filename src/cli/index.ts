@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { parseFile } from './utils/parseFile.util';
-import { collectTargetFiles } from './utils/collectTargetFiles.util';
-import { isDqlContent } from './utils/isDqlContent.util';
+import { parseFile } from './parseFile.util';
+import { collectTargetFiles } from './collectTargetFiles.util';
+import { isDqlContent } from './isDqlContent.util';
 import { formatDql } from '../formatting/format-dql';
 
 // CLI Entry Point - only execute when run directly, not when imported as a module

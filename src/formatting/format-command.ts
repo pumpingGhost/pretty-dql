@@ -1,6 +1,6 @@
 import { splitByDelimiter } from './split-by-delimiter';
 import { applyFormattingToCode } from './apply-formatting-to-code';
-import { DQL_ROOT_COMMANDS } from '../cli/constants/dqlRootCommands.constant';
+import { DQL_ROOT_COMMANDS } from '../constants/dqlRootCommands.constant';
 
 export const formatCommand = (cmdStr: string, index: number): string => {
   const p = cmdStr.trim();

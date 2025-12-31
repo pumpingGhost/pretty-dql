@@ -1,6 +1,6 @@
 import { handleColon } from './handle-colon';
 import { isEscaped } from './is-escaped';
-import { DQL_ROOT_COMMANDS } from '../cli/constants/dqlRootCommands.constant';
+import { DQL_ROOT_COMMANDS } from '../constants/dqlRootCommands.constant';
 
 export const formatSegment = (seg: string): string => {
   let i = 0;

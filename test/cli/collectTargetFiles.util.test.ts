@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { collectTargetFiles } from '../../src/cli/utils/collectTargetFiles.util';
+import { collectTargetFiles } from '../../src/cli/collectTargetFiles.util';
 
 const tmpRoot = path.join(__dirname, 'tmp-collect-target-files');
 
