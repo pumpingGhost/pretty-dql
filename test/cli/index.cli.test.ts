@@ -9,7 +9,7 @@ describe('dql-format CLI', () => {
   test('prints usage and exits with code 1 when no args provided', () => {
     const result = spawnSync(nodeBin, [cliPath], { encoding: 'utf-8' });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain('Usage: dql-format <filename>');
+    expect(result.stderr).toContain('Usage: pretty-dql <filename>');
   });
 
   test('exits with code 2 when file does not exist', () => {

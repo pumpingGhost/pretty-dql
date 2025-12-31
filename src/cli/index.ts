@@ -13,7 +13,7 @@ if (require.main === module) {
   if (argv[0] === '--raw') {
     const rawValues = argv.slice(1);
     if (rawValues.length === 0) {
-      console.error('Usage: dql-format --raw <dql-string...>');
+      console.error('Usage: pretty-dql --raw <dql-string...>');
       process.exit(1);
     }
 
@@ -64,7 +64,7 @@ if (require.main === module) {
   }
 
   if (paths.length === 0) {
-    console.error('Usage: dql-format <filename> [--ext=.ts,.tsx] [--fix]');
+    console.error('Usage: pretty-dql <filename> [--ext=.ts,.tsx] [--fix]');
     process.exit(1);
   }
 
