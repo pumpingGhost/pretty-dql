@@ -26,7 +26,7 @@ describe('formatDql', () => {
   it('should handle colons correctly', () => {
     const input = '| summarize count(), by:{entity}';
     const expected = `| summarize count(),
-            by: { entity }`;
+    by: { entity }`;
     expect(formatDql(input)).toBe(expected);
   });
 
@@ -77,6 +77,22 @@ describe('formatDql', () => {
     const expected = `| fields a,
          b,
          c`;
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should indent semantic arguments (key: value) by 2 spaces from command start', () => {
+    const input = '| fields a, by: b, kind: inner';
+    const expected = `| fields a,
+    by: b,
+    kind: inner`;
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should handle mixed normal and semantic arguments', () => {
+    const input = '| fields a, b, by: c';
+    const expected = `| fields a,
+         b,
+    by: c`;
     expect(formatDql(input)).toBe(expected);
   });
 });

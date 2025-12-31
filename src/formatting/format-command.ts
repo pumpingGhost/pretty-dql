@@ -27,12 +27,29 @@ export const formatCommand = (cmdStr: string, index: number): string => {
 
   if (formattedArgs.length > 1 && (index > 0 || !isRootCommand)) {
     // Indent the arguments if there are multiple and it's not the first command
-    // New rule: first argument on same line, subsequent arguments indented to align with first argument
-    const indentLength = prefix.length + commandName.length + 1;
-    const indent = ' '.repeat(indentLength);
+    // Normal arguments: aligned with the first argument
+    const normalIndentLength = prefix.length + commandName.length + 1;
+    const normalIndent = ' '.repeat(normalIndentLength);
 
-    const processedArgs = formattedArgs.map((arg) => arg.replace(/\n/g, '\n' + indent));
-    return prefix + commandName + ' ' + processedArgs.join(',\n' + indent);
+    // Semantic arguments (key: value): indented by 2 spaces from the command start
+    const semanticIndentLength = prefix.length + 2;
+    const semanticIndent = ' '.repeat(semanticIndentLength);
+
+    const processedArgs = formattedArgs.map((arg, i) => {
+      // Check if argument is "semantic" (starts with key:)
+      const isSemantic = /^\s*[\w.]+\s*:/.test(arg);
+      const myIndent = isSemantic ? semanticIndent : normalIndent;
+
+      // Indent internal newlines
+      const indentedArg = arg.replace(/\n/g, '\n' + myIndent);
+
+      if (i === 0) {
+        return indentedArg;
+      }
+      return '\n' + myIndent + indentedArg;
+    });
+
+    return prefix + commandName + ' ' + processedArgs.join(',');
   } else {
     const joinedArgs = formattedArgs.join(', ');
     return prefix + commandName + (joinedArgs ? ' ' + joinedArgs : '');
