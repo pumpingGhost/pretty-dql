@@ -31,10 +31,10 @@ describe('formatSegment', () => {
     expect(formatSegment(input)).toBe('fields: {\n  id,\n  name\n}');
   });
 
-  it('should not split subqueries inside brackets', () => {
+  it('should format subqueries inside brackets with indentation', () => {
     const input = 'join [ fetch a, b ]';
-    // Expect single line formatting (with spaces)
-    expect(formatSegment(input)).toBe('join [ fetch a, b ]');
+    // Expect multiline formatting with indentation
+    expect(formatSegment(input)).toBe('join [\n  fetch a, b\n]');
   });
 
   it('should handle template variables without formatting', () => {

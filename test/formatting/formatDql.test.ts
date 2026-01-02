@@ -19,7 +19,7 @@ describe('formatDql', () => {
   it('should handle brackets correctly', () => {
     const input = '| fields [entity], {queryCount}';
     const expected = `| fields [ entity ],
-         { queryCount }`;
+    { queryCount }`;
     expect(formatDql(input)).toBe(expected);
   });
 

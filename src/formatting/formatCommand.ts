@@ -36,9 +36,10 @@ export const formatCommand = (cmdStr: string, index: number): string => {
     const semanticIndent = ' '.repeat(semanticIndentLength);
 
     const processedArgs = formattedArgs.map((arg, i) => {
-      // Check if argument is "semantic" (starts with key:)
+      // Check if argument is "semantic" (starts with key:) or starts with a bracket
       const isSemantic = /^\s*[\w.]+\s*:/.test(arg);
-      const myIndent = isSemantic ? semanticIndent : normalIndent;
+      const isBracket = /^\s*[\[\{]/.test(arg);
+      const myIndent = isSemantic || isBracket ? semanticIndent : normalIndent;
 
       // Indent internal newlines
       const indentedArg = arg.replace(/\n/g, '\n' + myIndent);

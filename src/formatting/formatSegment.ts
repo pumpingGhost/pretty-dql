@@ -1,6 +1,8 @@
 import { handleColon } from './handleColon';
 import { isEscaped } from './isEscaped';
 import { DQL_ROOT_COMMANDS } from '../constants/dqlRootCommands.constant';
+import { formatCommand } from './formatCommand';
+import { splitByDelimiter } from './splitByDelimiter';
 
 export const formatSegment = (seg: string): string => {
   let i = 0;
@@ -99,15 +101,35 @@ export const formatSegment = (seg: string): string => {
         const parts = open.parts;
         let formattedBlock = '';
 
-        // Check if it's a subquery (starts with a root command)
-        const firstWord = parts.length > 0 ? parts[0].split(/\s/)[0] : '';
-        const isSubquery = DQL_ROOT_COMMANDS.includes(firstWord);
+        // Check if it's a subquery (starts with a root command or pipe)
+        const firstPart = parts.length > 0 ? parts[0] : '';
+        const trimmedFirst = firstPart.trim();
+        const isSubquery =
+          trimmedFirst.startsWith('|') ||
+          DQL_ROOT_COMMANDS.some((cmd) => trimmedFirst.startsWith(cmd + ' ') || trimmedFirst === cmd);
 
-        if (parts.length > 1 && !isSubquery) {
+        if (isSubquery) {
+          // It's a subquery. We expect parts to contain the whole query as one string (because we didn't split by comma)
+          const subquery = parts.join(', '); // Just in case
+
+          // Format the subquery
+          const commands = splitByDelimiter(subquery, '|');
+          const formattedCommands = commands
+            .map((cmd, index) => formatCommand(cmd, index))
+            .filter((p) => p.length > 0)
+            .join('\n');
+
+          // Indent the formatted commands
+          const INDENT = '  ';
+          const indentedContent = formattedCommands.replace(/^/gm, INDENT);
+
+          formattedBlock = `${open.startChar}\n${indentedContent}\n${char}`;
+        } else if (parts.length > 1) {
           // Multiline
-          const joined = parts.join(',\n  ');
+          const INDENT = '  ';
+          const joined = parts.join(`,\n${INDENT}`);
           // Indent the closing bracket to align with start (0 indent relative to block)
-          formattedBlock = `${open.startChar}\n  ${joined}\n${char}`;
+          formattedBlock = `${open.startChar}\n${INDENT}${joined}\n${char}`;
         } else {
           // Single line
           const joined = parts.join(', ');
@@ -129,6 +151,28 @@ export const formatSegment = (seg: string): string => {
     if (char === ',') {
       // If we are inside brackets (stack > 1), split.
       if (stack.length > 1) {
+        // Check if we are in a subquery mode
+        let isSubquery = false;
+        const firstPart = current.parts.length > 0 ? current.parts[0] : current.currentPart;
+        const trimmedFirst = firstPart.trim();
+
+        if (
+          trimmedFirst.startsWith('|') ||
+          DQL_ROOT_COMMANDS.some((cmd) => trimmedFirst.startsWith(cmd + ' ') || trimmedFirst === cmd)
+        ) {
+          isSubquery = true;
+        }
+
+        if (isSubquery) {
+          // Don't split, just append comma
+          current.currentPart += ',';
+          i++;
+          if (i < seg.length && seg[i] !== '\n' && seg[i] !== ' ') {
+            current.currentPart += ' ';
+          }
+          continue;
+        }
+
         current.parts.push(current.currentPart.trim());
         current.currentPart = '';
         i++;

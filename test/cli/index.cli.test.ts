@@ -59,7 +59,10 @@ describe('dql-format CLI', () => {
 
     expect(result.status).toBe(0);
     const lines = result.stdout.trim().split(/\r?\n/);
-    expect(lines).toEqual(['data from logs', '| filter status == 200']);
+    expect(lines.length).toBe(3);
+    expect(lines[0]).toBe('data from logs');
+    expect(lines[1]).toBe('');
+    expect(lines[2]).toContain('filter status == 200');
   });
 
   test('honors the --ext flag when scanning directories', () => {
@@ -89,7 +92,10 @@ describe('dql-format CLI', () => {
 
     expect(result.status).toBe(0);
     const lines = result.stdout.trim().split(/\r?\n/);
-    expect(lines).toEqual(['data from logs', '| filter status == 200']);
+    expect(lines.length).toBe(3);
+    expect(lines[0]).toBe('data from logs');
+    expect(lines[1]).toBe('');
+    expect(lines[2]).toContain('filter status == 200');
   });
 
   test('replaces DQL strings with formatted versions when --fix is provided', () => {

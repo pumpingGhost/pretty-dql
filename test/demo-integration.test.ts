@@ -6,7 +6,9 @@ describe('Demo Integration Tests', () => {
   test('join', () => {
     const formatted = formatDql(join);
     expect(formatted).toContain('| join');
-    expect(formatted).toContain('[ fetch dt.entity.service, dt.service ],');
+    // Subquery is now multiline
+    expect(formatted).toContain('fetch spans');
+    expect(formatted).toContain('fieldsAdd dt.entity.service');
     expect(formatted).toContain('on: { left[ dt.entity.service ] == right[ id ] },');
     expect(formatted).toContain('fields: {');
     expect(formatted).toContain('  id,');
@@ -21,7 +23,8 @@ describe('Demo Integration Tests', () => {
     expect(formatted).toContain('         b');
     expect(formatted).toContain('| fieldsAdd x');
     expect(formatted).toContain('| fields [ entity ],');
-    expect(formatted).toContain('         { queryCount } = toLong(queryCount),');
+    // Adjusted expectation for spacing (bracket argument uses semantic indentation)
+    expect(formatted).toContain('    { queryCount } = toLong(queryCount),');
     expect(formatted).toContain('         errorCount = toLong(errorCount)');
     expect(formatted).toContain('| summarize count(),');
     expect(formatted).toContain('    by: { entity }');
