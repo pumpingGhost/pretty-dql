@@ -22,9 +22,8 @@ describe('Demo Integration Tests', () => {
     expect(formatted).toContain('| fields a,');
     expect(formatted).toContain('         b');
     expect(formatted).toContain('| fieldsAdd x');
-    expect(formatted).toContain('| fields [ entity ],');
-    // Adjusted expectation for spacing (bracket argument uses semantic indentation)
-    expect(formatted).toContain('    { queryCount } = toLong(queryCount),');
+    expect(formatted).toContain('| fields entity = [ entity ],');
+    expect(formatted).toContain('         queryCount = toLong(queryCount),');
     expect(formatted).toContain('         errorCount = toLong(errorCount)');
     expect(formatted).toContain('| summarize count(),');
     expect(formatted).toContain('    by: { entity }');
