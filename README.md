@@ -13,7 +13,7 @@ A simple and efficient DQL (Dynatrace Query Language) formatter.
 - Keeps top-level root commands (like `fetch`) single-line if possible.
 - Ensures commas are followed by a space if not followed by a newline.
 - Formats multiple arguments inside brackets `[]` and `{}` on new lines with indentation.
-- Formats subqueries inside brackets `[]` on new lines with indentation.
+- Formats subqueries inside brackets `[]` recursively according to the block depth.
 - Preserves template string variables `${...}` without formatting.
 - Aligns subsequent arguments of a command with the first argument, which is kept on the same line as the command.
 - Indents "semantic" arguments (arguments starting with `key:`) by 2 spaces from the command start, instead of aligning with the first argument.
