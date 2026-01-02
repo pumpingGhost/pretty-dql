@@ -33,7 +33,7 @@ if (require.main === module) {
 
       const formatted = formatDql(s);
       if (formatted) {
-        console.log(formatted);
+        console.log('\n' + formatted);
       }
     });
 

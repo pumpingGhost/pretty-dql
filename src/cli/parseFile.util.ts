@@ -64,7 +64,7 @@ export function parseFile(filename: string, options?: { fix?: boolean }): void {
         console.log(`No changes needed for ${filename}`);
       }
     } else {
-      dqlCommands.forEach((command) => console.log(formatDql(command.dql)));
+      dqlCommands.forEach((command) => console.log('\n' + formatDql(command.dql)));
     }
   } catch (err) {
     console.error(`Error reading file ${filename}:`, err instanceof Error ? err.message : String(err));
