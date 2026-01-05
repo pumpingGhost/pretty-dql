@@ -1,6 +1,6 @@
 import { formatDql } from '../src';
 // @ts-ignore
-import { join, fetch, normalArguments, semanticArguments, nestedJoin } from './integrationQueries';
+import { join, fetch, normalArguments, semanticArguments, nestedJoin, timeseries } from './integrationQueries';
 
 describe('Demo Integration Tests', () => {
   test('join', () => {
@@ -87,5 +87,29 @@ describe('Demo Integration Tests', () => {
     // So closing bracket is NOT indented?
     // Let's verify with a test run.
     expect(formatted).toContain(']');
+  });
+
+  test('timeseries', () => {
+    const formatted = formatDql(timeseries);
+    expect(formatted).toContain('timeseries {');
+    expect(formatted).toContain(
+      '  receive.rate_per_minute = sum(dt.service.messaging.receive.count, scalar: true, rate: 1m, default: 0),',
+    );
+    expect(formatted).toContain(
+      '  publish.rate_per_minute = sum(dt.service.messaging.publish.count, scalar: true, rate: 1m, default: 0),',
+    );
+    expect(formatted).toContain('},');
+    expect(formatted).toContain('by: {');
+    expect(formatted).toContain('  dt.entity.service,');
+    expect(formatted).toContain('  dt.entity.process_group,');
+    expect(formatted).toContain('},');
+    expect(formatted).toContain('union: true');
+    expect(formatted).toContain('| fieldsAdd entityName(dt.entity.service)');
+    expect(formatted).toContain('| summarize {');
+    expect(formatted).toContain('      receive.rate_per_minute = sum(receive.rate_per_minute),');
+    expect(formatted).toContain('    },');
+    expect(formatted).toContain('    by: {');
+    expect(formatted).toContain('      dt.entity.service,');
+    expect(formatted).toContain('    }');
   });
 });

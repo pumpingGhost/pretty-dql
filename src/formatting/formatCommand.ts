@@ -24,8 +24,9 @@ export const formatCommand = (cmdStr: string, index: number): string => {
   const formattedArgs = args.map((arg) => applyFormattingToCode(arg).trim());
 
   const isRootCommand = DQL_ROOT_COMMANDS.includes(commandName);
+  const hasBrackets = formattedArgs.some((arg) => /^\s*[\{\[]/.test(arg));
 
-  if (formattedArgs.length > 1 && (index > 0 || !isRootCommand)) {
+  if (formattedArgs.length > 1 && (index > 0 || !isRootCommand || hasBrackets)) {
     // Indent the arguments if there are multiple and it's not the first command
     // Normal arguments: aligned with the first argument
     const normalIndentLength = prefix.length + commandName.length + 1;

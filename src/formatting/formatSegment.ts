@@ -8,8 +8,8 @@ export const formatSegment = (seg: string): string => {
   let i = 0;
   // Stack stores the state of the current bracket level.
   // level 0 is the root string.
-  const stack: { parts: string[]; currentPart: string; startChar: string }[] = [
-    { parts: [], currentPart: '', startChar: '' },
+  const stack: { parts: string[]; currentPart: string; startChar: string; parenDepth: number }[] = [
+    { parts: [], currentPart: '', startChar: '', parenDepth: 0 },
   ];
 
   while (i < seg.length) {
@@ -76,9 +76,25 @@ export const formatSegment = (seg: string): string => {
       continue;
     }
 
+    // Handle parentheses for depth tracking (to avoid splitting by comma inside them)
+    if (char === '(') {
+      current.parenDepth++;
+      current.currentPart += char;
+      i++;
+      continue;
+    }
+    if (char === ')') {
+      if (current.parenDepth > 0) {
+        current.parenDepth--;
+      }
+      current.currentPart += char;
+      i++;
+      continue;
+    }
+
     // Handle opening brackets
     if ('[{'.includes(char)) {
-      stack.push({ parts: [], currentPart: '', startChar: char });
+      stack.push({ parts: [], currentPart: '', startChar: char, parenDepth: 0 });
       i++;
       continue;
     }
@@ -173,10 +189,20 @@ export const formatSegment = (seg: string): string => {
           continue;
         }
 
-        current.parts.push(current.currentPart.trim());
-        current.currentPart = '';
-        i++;
-        continue;
+        // Only split if parenDepth is 0
+        if (current.parenDepth === 0) {
+          current.parts.push(current.currentPart.trim());
+          current.currentPart = '';
+          i++;
+          continue;
+        } else {
+          current.currentPart += ',';
+          i++;
+          if (i < seg.length && seg[i] !== '\n' && seg[i] !== ' ') {
+            current.currentPart += ' ';
+          }
+          continue;
+        }
       }
       // If at root level, apply Rule 3 (space after comma)
       current.currentPart += ',';

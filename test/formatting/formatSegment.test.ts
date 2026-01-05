@@ -41,4 +41,14 @@ describe('formatSegment', () => {
     const input = 'filter ${ID} == "123"';
     expect(formatSegment(input)).toBe('filter ${ID} == "123"');
   });
+
+  it('should not split by comma inside parentheses', () => {
+    const input = 'func(a,b)';
+    expect(formatSegment(input)).toBe('func(a, b)');
+  });
+
+  it('should not split by comma inside nested parentheses', () => {
+    const input = 'func(a, func2(b, c))';
+    expect(formatSegment(input)).toBe('func(a, func2(b, c))');
+  });
 });
