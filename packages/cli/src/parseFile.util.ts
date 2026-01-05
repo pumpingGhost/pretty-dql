@@ -1,8 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { extractDqlCommandLocations } from './extractDqlCommands.util';
-import { tokenizeByQuotes } from '../formatting/tokenizeByQuotes';
-import { formatDql } from '../formatting/formatDql';
+import { formatDql, tokenizeByQuotes } from '@pretty-dql/format-dql';
 
 export function parseFile(filename: string, options?: { fix?: boolean }): void {
   const filePath = path.isAbsolute(filename) ? filename : path.resolve(process.cwd(), filename);

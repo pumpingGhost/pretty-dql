@@ -1,34 +1,12 @@
 {
-  "name": "pretty-dql",
-  "version": "1.0.0",
-  "description": "Standardized styling and formatting for string-based DQL queries",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "bin": {
-    "pretty-dql": "./dist/cli/cli.js"
-  },
-  "files": [
-    "dist"
-  ],
+  "name": "pretty-dql-monorepo",
+  "private": true,
   "scripts": {
-    "build": "tsc",
-    "test": "jest",
-    "lint": "eslint src/**/*.ts",
-    "format": "prettier --write \"{src,test}/**/*.ts\"",
-    "pack": "npm run build && npm pack"
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "eslint packages/**/*.ts",
+    "format": "prettier --write \"packages/**/*.ts\""
   },
-  "keywords": [
-    "dql",
-    "format",
-    "formatter",
-    "pretty",
-    "prettier"
-  ],
-  "author": "Felix Neustifter",
-  "contributors": [
-    "Johannes Krahofer"
-  ],
-  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^20.19.27",

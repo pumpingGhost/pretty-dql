@@ -1,0 +1,26 @@
+{
+  "name": "@pretty-dql/cli",
+  "version": "1.0.0",
+  "description": "CLI for pretty-dql",
+  "bin": {
+    "pretty-dql": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@pretty-dql/format-dql": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.19.27",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}

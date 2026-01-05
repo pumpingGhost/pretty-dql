@@ -1,0 +1,25 @@
+{
+  "name": "@pretty-dql/prettier-plugin-dql",
+  "version": "1.0.0",
+  "description": "A Prettier plugin to format DQL strings using a custom formatter",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "pnpm build",
+    "format": "prettier . --write",
+    "check:format": "prettier . --check",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "prettier",
+    "plugin",
+    "dql",
+    "formatter"
+  ],
+  "author": "Johannes Krahofer",
+  "license": "MIT",
+  "dependencies": {
+    "@pretty-dql/format-dql": "workspace:*"
+  }
+}

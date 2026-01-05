@@ -1,5 +1,4 @@
 import { formatDql } from '../src';
-// @ts-ignore
 import { join, fetch, normalArguments, semanticArguments, nestedJoin, timeseries } from './integrationQueries';
 
 describe('Demo Integration Tests', () => {

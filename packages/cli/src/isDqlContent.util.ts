@@ -1,5 +1,4 @@
-import { DQL_ROOT_COMMANDS } from '../constants/dqlRootCommands.constant';
-import { DQL_TRANSFORMATION_COMMANDS } from '../constants/dqlTransformationCommands.constant';
+import { DQL_ROOT_COMMANDS, DQL_TRANSFORMATION_COMMANDS } from '@pretty-dql/format-dql';
 
 export function isDqlContent(raw: string): boolean {
   // Remove surrounding quotes/backticks if present and trim whitespace

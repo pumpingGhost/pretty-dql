@@ -1,4 +1,4 @@
-import { tokenizeByQuotes } from '../../src/formatting/tokenizeByQuotes';
+import { tokenizeByQuotes } from '../../src';
 
 describe('tokenizeByQuotes', () => {
   it('should tokenize string without quotes', () => {
