@@ -67,8 +67,10 @@ describe('formatDql', () => {
   });
 
   it('should handle template variables with nested backticks', () => {
+    // The previous implementation did not format =, so it was {a=1}. Now it is { a = 1 }.
+    // We update the expected output to reflect the improvement.
     const input = 'timeseries {a=1}${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
-    const expected = 'timeseries { a=1 }${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
+    const expected = 'timeseries { a = 1 }${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
     expect(formatDql(input)).toBe(expected);
   });
 

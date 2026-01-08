@@ -51,4 +51,20 @@ describe('formatSegment', () => {
     const input = 'func(a, func2(b, c))';
     expect(formatSegment(input)).toBe('func(a, func2(b, c))');
   });
+
+  it('should indent multiline content inside brackets even if only one part', () => {
+    const input = `{ sum(a,\nb) }`;
+    const expected = `{\n  sum(a,\n  b)\n}`;
+    expect(formatSegment(input)).toBe(expected);
+  });
+
+  it('should space around equals', () => {
+    expect(formatSegment('a=b')).toBe('a = b');
+    expect(formatSegment('a  =b')).toBe('a = b');
+    expect(formatSegment('a=  b')).toBe('a = b');
+    expect(formatSegment('a==b')).toBe('a == b');
+    // Test checking if it breaks logical operators (it only handles =)
+    expect(formatSegment('a!=b')).toBe('a != b');
+    expect(formatSegment('a<=b')).toBe('a <= b');
+  });
 });

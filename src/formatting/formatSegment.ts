@@ -3,6 +3,7 @@ import { isEscaped } from './isEscaped';
 import { DQL_ROOT_COMMANDS } from '../constants/dqlRootCommands.constant';
 import { formatCommand } from './formatCommand';
 import { splitByDelimiter } from './splitByDelimiter';
+import { handleEquals } from './handleEquals';
 
 export const formatSegment = (seg: string): string => {
   let i = 0;
@@ -149,7 +150,21 @@ export const formatSegment = (seg: string): string => {
         } else {
           // Single line
           const joined = parts.join(', ');
-          formattedBlock = `${open.startChar} ${joined} ${char}`;
+          // We must handle indentation for single line bracket if it internally contains newlines (e.g. from parentheses with newlines)
+          if (joined.includes('\n')) {
+            const INDENT = '  ';
+            // We need to indent every newline inside 'joined'.
+            // But we need to be careful if we are adding excessive indentation.
+            // Here we force multiline block style.
+
+            // Ensure wrapped content is indented.
+            // If joined content has internal newlines, they might have their own indent.
+            // We replace newline+whitespace with newline+INDENT.
+            const indentedJoined = joined.replace(/\n\s*/g, `\n${INDENT}`);
+            formattedBlock = `${open.startChar}\n${INDENT}${indentedJoined}\n${char}`;
+          } else {
+            formattedBlock = `${open.startChar} ${joined} ${char}`;
+          }
         }
 
         // Append to parent
@@ -216,6 +231,57 @@ export const formatSegment = (seg: string): string => {
     // Handle colon
     if (char === ':') {
       const result = handleColon(seg, i);
+      current.currentPart += result.newSeg;
+      i = result.newIndex;
+      continue;
+    }
+
+    // Handle equals
+    if (char === '=') {
+      const result = handleEquals(seg, i);
+
+      // If handleEquals returns string starting with space (result.newSeg[0] === ' '),
+      // we must ensure that currentPart does not already end with space.
+      // If it does, we should trim existing spaces.
+
+      const isStartSpace = result.newSeg.startsWith(' ');
+
+      if (isStartSpace) {
+        current.currentPart = current.currentPart.replace(/\s+$/, '');
+      } else {
+        // It does not start with space. This usually means it is a composite operator part (e.g. <=).
+        // In this case, we might need to ensure space BEFORE the previous character, if it wasn't there.
+        // e.g. input `a<=b`. `currentPart` is `...a<`. We append `= `. result `...a<= `.
+        // We want `...a <= `.
+
+        // So we need to check if we should add space before the last character of currentPart.
+        // Wait, checking last char is tricky.
+        // We assume the operator is 2 chars. `currentPart` ends with operator[0].
+        // We want space before operator[0].
+
+        // If we blindly add space?
+        // `current.currentPart` -> remove last char, trim spaces, add space, add last char.
+
+        // But we need to know IF we should do this.
+        // `handleEquals` knows if it matched composite (via `isPartOfComposite`).
+        // However, `handleEquals` doesn't return that flag explicitly.
+        // But we can infer it: if `newSeg` does NOT start with space, it's composite part.
+
+        // EXCEPT if it was somehow start of string? But `seg[i-1]` check handles that.
+
+        // So if !isStartSpace, we probably want space before the composite operator.
+        // The composite operator started at `seg[i-1]`.
+        // `currentPart` ends with `seg[i-1]`.
+
+        // Let's implement logic to insert space before the last character.
+        if (current.currentPart.length > 0) {
+          const lastChar = current.currentPart[current.currentPart.length - 1]; // e.g. '<'
+          const prefix = current.currentPart.slice(0, -1);
+          // Ensure space before lastChar
+          current.currentPart = prefix.replace(/\s+$/, '') + ' ' + lastChar;
+        }
+      }
+
       current.currentPart += result.newSeg;
       i = result.newIndex;
       continue;
