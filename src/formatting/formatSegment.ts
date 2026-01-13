@@ -185,8 +185,10 @@ export const formatSegment = (seg: string): string => {
             // We replace newline+whitespace with newline+INDENT.
             const indentedJoined = joined.replace(/\n\s*/g, `\n${INDENT}`);
             formattedBlock = `${open.startChar}\n${INDENT}${indentedJoined}\n${char}`;
-          } else {
+          } else if (parts.length > 1 || char === '}') {
             formattedBlock = `${open.startChar} ${joined} ${char}`;
+          } else {
+            formattedBlock = `${open.startChar}${joined}${char}`;
           }
         }
 

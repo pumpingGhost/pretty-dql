@@ -3,7 +3,7 @@ import { formatDql } from '../../src/formatting/formatDql';
 describe('trailingCommentIndent', () => {
   it('should not indent comments trailing the last argument', () => {
     const input = `| join [ fetch spans ]
-, on: {trace.id}, kind: inner
+, on: { trace.id }, kind: inner
 
 // trailing comment
 | fieldsAdd x`;

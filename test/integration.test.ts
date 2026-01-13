@@ -9,7 +9,7 @@ describe('Demo Integration Tests', () => {
     // Subquery is now multiline
     expect(formatted).toContain('fetch spans');
     expect(formatted).toContain('fieldsAdd dt.entity.service');
-    expect(formatted).toContain('on: { left[ dt.entity.service ] == right[ id ] },');
+    expect(formatted).toContain('on: { left[dt.entity.service] == right[id] },');
     expect(formatted).toContain('fields: {');
     expect(formatted).toContain('  id,');
     expect(formatted).toContain('  dt.security.context,');
@@ -22,7 +22,7 @@ describe('Demo Integration Tests', () => {
     expect(formatted).toContain('| fields a,');
     expect(formatted).toContain('         b');
     expect(formatted).toContain('| fieldsAdd x');
-    expect(formatted).toContain('| fields entity = [ entity ],');
+    expect(formatted).toContain('| fields entity = [entity],');
     expect(formatted).toContain('         queryCount = toLong(queryCount),');
     expect(formatted).toContain('         errorCount = toLong(errorCount)');
     expect(formatted).toContain('| summarize count(),');
@@ -62,30 +62,6 @@ describe('Demo Integration Tests', () => {
     // Closing nested bracket (indent 2 spaces)
     expect(formatted).toContain('  ],');
 
-    // Closing outer bracket (indent 0 spaces relative to start, but it's a closing bracket for the first arg)
-    // Wait, closing bracket for subquery is on new line.
-    // If subquery starts at indent 2, closing bracket should be at indent 0?
-    // formatSegment: `formattedBlock = ${open.startChar}\n${indentedContent}\n${char}`;`
-    // No indentation for closing char in formatSegment for subquery?
-    // Let's check formatSegment.ts again.
-    // `formattedBlock = ${open.startChar}\n${indentedContent}\n${char}`;`
-    // So closing bracket is at start of line?
-    // But `formatCommand` indents arguments.
-    // If `join [ ... ]` is the command.
-    // `[ ... ]` is the first argument.
-    // `formatCommand` returns `prefix + commandName + ' ' + processedArgs.join(',')`.
-    // If `processedArgs[0]` is `[ ... ]`.
-    // It is returned as is (indentedArg).
-    // So `| join [ ... ]`.
-    // Inside `[ ... ]`:
-    // `\n  fetch ...`
-    // `\n]`
-    // So:
-    // `| join [`
-    // `  fetch ...`
-    // `]`
-    // So closing bracket is NOT indented?
-    // Let's verify with a test run.
     expect(formatted).toContain(']');
   });
 
@@ -111,5 +87,10 @@ describe('Demo Integration Tests', () => {
     expect(formatted).toContain('    by: {');
     expect(formatted).toContain('      dt.entity.service,');
     expect(formatted).toContain('    }');
+    expect(formatted).toContain(`| fieldsAdd entity = record(entityId = dt.entity.service,
+        displayName = entityName(dt.entity.service),
+        lifetimeEndMillis = unixMillisFromTimestamp(lifetime[end]),
+        customIconPath = customIconPath,
+        icon = icon[primaryIconType])`);
   });
 });

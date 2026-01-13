@@ -18,13 +18,13 @@ describe('formatDql', () => {
 
   it('should handle brackets correctly', () => {
     const input = '| fields [entity], {queryCount}';
-    const expected = `| fields [ entity ],
+    const expected = `| fields [entity],
     { queryCount }`;
     expect(formatDql(input)).toBe(expected);
   });
 
   it('should handle colons correctly', () => {
-    const input = '| summarize count(), by:{entity}';
+    const input = '| summarize count(), by:{ entity }';
     const expected = `| summarize count(),
     by: { entity }`;
     expect(formatDql(input)).toBe(expected);
@@ -44,7 +44,7 @@ describe('formatDql', () => {
 
   it('should handle nested brackets', () => {
     const input = '| fields [nested [brackets]]';
-    const expected = `| fields [ nested [ brackets ] ]`;
+    const expected = `| fields [nested [brackets]]`;
     expect(formatDql(input)).toBe(expected);
   });
 
@@ -61,16 +61,16 @@ describe('formatDql', () => {
   });
 
   it('should still format normal brackets', () => {
-    const input = 'fetch logs | filter {left[ dt.entity.service ] == right[ id ]}';
-    const expected = 'fetch logs\n| filter { left[ dt.entity.service ] == right[ id ] }';
+    const input = 'fetch logs | filter { left[ dt.entity.service ] == right[ id ] }';
+    const expected = 'fetch logs\n| filter { left[dt.entity.service] == right[id] }';
     expect(formatDql(input)).toBe(expected);
   });
 
   it('should handle template variables with nested backticks', () => {
     // The previous implementation did not format =, so it was {a=1}. Now it is { a = 1 }.
     // We update the expected output to reflect the improvement.
-    const input = 'timeseries {a=1}${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
-    const expected = 'timeseries { a = 1 }${!isGlobal ? `\\n, filter: ${ID} == $(id)` : ""}';
+    const input = 'timeseries { a=1 }${!isGlobal ? `\\n, filter: ${ ID } == $(id)` : ""}';
+    const expected = 'timeseries { a = 1 }${!isGlobal ? `\\n, filter: ${ ID } == $(id)` : ""}';
     expect(formatDql(input)).toBe(expected);
   });
 

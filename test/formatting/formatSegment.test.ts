@@ -2,7 +2,8 @@ import { formatSegment } from '../../src/formatting/formatSegment';
 
 describe('formatSegment', () => {
   it('should format brackets', () => {
-    expect(formatSegment('[a]')).toBe('[ a ]');
+    // Current logic: single item -> no space
+    expect(formatSegment('[a]')).toBe('[a]');
   });
 
   it('should format colons', () => {
@@ -77,6 +78,17 @@ describe('formatSegment', () => {
     const input = `{ sum(a,\nb) }`;
     const expected = `{\n  sum(a,\n  b)\n}`;
     expect(formatSegment(input)).toBe(expected);
+  });
+
+  it('should format brackets with spaces only if multiple arguments', () => {
+    // Single argument - no spaces
+    expect(formatSegment('fieldsAdd (a)')).toBe(`fieldsAdd (a)`);
+    // Multiple arguments - spaces inside (actually fieldsAdd uses parens usually without brackets, but let's test generic brackets)
+    // But formatSegment logic for brackets applies to [ and {
+    expect(formatSegment('summarize { count() }')).toBe(`summarize { count() }`);
+
+    expect(formatSegment('summarize { count(), avg() }')).toBe(`summarize {\n  count(),\n  avg()\n}`);
+    expect(formatSegment('summarize {count()}')).toBe(`summarize { count() }`);
   });
 
   it('should space around equals', () => {
