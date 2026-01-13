@@ -34,6 +34,29 @@ export const formatSegment = (seg: string): string => {
       continue;
     }
 
+    // Handle line comments
+    if (char === '/' && i + 1 < seg.length && seg[i + 1] === '/') {
+      let commentContent = char;
+      i++;
+      while (i < seg.length) {
+        const c = seg[i];
+        commentContent += c;
+        if (c === '\n' || c === '\r') {
+          i++;
+          break;
+        }
+        i++;
+      }
+      current.currentPart += commentContent;
+      // If we hit newline, loop will continue, incrementing i if not careful
+      // The while loop consumes the newline? Yes: commentContent += c; i++.
+      // But outer loop also has logic?
+      // Wait, outer loop is while (i < seg.length).
+      // Here we incremented i. So next iteration resumes after newline.
+      // But if we consumed newline, we are good.
+      continue;
+    }
+
     // Handle template variables ${...}
     if (char === '$' && i + 1 < seg.length && seg[i + 1] === '{') {
       let braceDepth = 1;

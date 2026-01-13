@@ -4,15 +4,37 @@ export const processChar = (
   char: string,
   str: string,
   index: number,
-  state: { quoteChar: string; depth: number; current: string; parts: string[] },
+  state: {
+    quoteChar: string;
+    depth: number;
+    current: string;
+    parts: string[];
+    isLineComment?: boolean;
+  },
   delimiter: string,
 ) => {
+  // Handle line comments
+  if (state.isLineComment) {
+    state.current += char;
+    if (char === '\n') {
+      state.isLineComment = false;
+    }
+    return;
+  }
+
   // Handle characters inside quotes to avoid splitting on delimiters within strings
   if (state.quoteChar) {
     state.current += char;
     if (char === state.quoteChar && !isEscaped(str, index)) {
       state.quoteChar = '';
     }
+    return;
+  }
+
+  // Detect start of line comment
+  if (char === '/' && str[index + 1] === '/') {
+    state.isLineComment = true;
+    state.current += char;
     return;
   }
 

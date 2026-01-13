@@ -42,8 +42,42 @@ export const formatCommand = (cmdStr: string, index: number): string => {
       const isBracket = /^\s*[\[\{]/.test(arg);
       const myIndent = isSemantic || isBracket ? semanticIndent : normalIndent;
 
-      // Indent internal newlines
-      const indentedArg = arg.replace(/\n/g, '\n' + myIndent);
+      let indentedArg: string;
+
+      // Special handling for the last argument to prevent indenting trailing comments
+      if (i === formattedArgs.length - 1) {
+        const lines = arg.split('\n');
+        let pivotIndex = lines.length;
+
+        // Iterate from bottom up to find where "trailing" part starts
+        // Trailing part: lines that are blank or start with //
+        for (let j = lines.length - 1; j >= 0; j--) {
+          const line = lines[j].trim();
+          if (line.length === 0 || line.startsWith('//')) {
+            pivotIndex = j;
+          } else {
+            // Found non-comment, non-empty code lines. Stop.
+            break;
+          }
+        }
+
+        if (pivotIndex < lines.length && pivotIndex > 0) {
+          // We found a trailing block
+          const mainPart = lines.slice(0, pivotIndex).join('\n');
+          const trailingPart = lines.slice(pivotIndex).join('\n');
+
+          const indentedMain = mainPart.replace(/\n/g, '\n' + myIndent);
+          // Trailing part: preserve structure but don't add myIndent.
+          // We simply join it back with newline, effectively resetting indentation to start of line.
+          indentedArg = indentedMain + '\n' + trailingPart;
+        } else {
+          // No special trailing block or entire arg is trailing junk
+          indentedArg = arg.replace(/\n/g, '\n' + myIndent);
+        }
+      } else {
+        // Normal processing for non-last arguments
+        indentedArg = arg.replace(/\n/g, '\n' + myIndent);
+      }
 
       if (i === 0) {
         return indentedArg;

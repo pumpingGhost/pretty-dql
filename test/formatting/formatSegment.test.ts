@@ -47,6 +47,27 @@ describe('formatSegment', () => {
     expect(formatSegment(input)).toBe('func(a, b)');
   });
 
+  it('should not format line comments', () => {
+    expect(formatSegment('// a:b')).toBe('// a:b');
+  });
+
+  it('should not format line comments ending with newline', () => {
+    // Note: formatSegment logic appends preserved comment to currentPart.
+    // The whitespace preservation depends on implementation.
+    // If input has newline, output should preserve it.
+    expect(formatSegment('// a:b\n')).toBe('// a:b\n');
+  });
+
+  it('should not format mixed content and comments', () => {
+    // 'a:b // c:d' -> 'a: b // c:d'
+    // 'a:b' formats to 'a: b'.
+    // '// c:d' preserves.
+    // Space before //?
+    // formatSegment processes 'a' ':' 'b' ' ' '/' '/'...
+    // ' ' is preserved.
+    expect(formatSegment('a:b // c:d')).toBe('a: b // c:d');
+  });
+
   it('should not split by comma inside nested parentheses', () => {
     const input = 'func(a, func2(b, c))';
     expect(formatSegment(input)).toBe('func(a, func2(b, c))');

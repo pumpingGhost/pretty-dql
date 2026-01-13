@@ -97,4 +97,28 @@ describe('formatDql', () => {
     by: c`;
     expect(formatDql(input)).toBe(expected);
   });
+
+  it('should not format line comments at the start', () => {
+    const input = '// comment\n| fetch logs';
+    const expected = '// comment\n| fetch logs';
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should not format line comments inside command arguments', () => {
+    const input = '| fields a, // my comment\nb';
+    const expected = '| fields a,\n         // my comment\n         b';
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should ignore delimiters inside comments', () => {
+    const input = '// comment with | pipe \n| fetch logs';
+    const expected = '// comment with | pipe\n| fetch logs';
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  it('should handle multiple comment lines', () => {
+    const input = '// c1\n// c2\n| fetch logs';
+    const expected = '// c1\n// c2\n| fetch logs';
+    expect(formatDql(input)).toBe(expected);
+  });
 });

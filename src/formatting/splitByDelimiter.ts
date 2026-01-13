@@ -2,7 +2,13 @@ import { processChar } from './processChar';
 
 export const splitByDelimiter = (str: string, delimiter: string): string[] => {
   // Initialize the state for splitting the string by a delimiter
-  const state = { quoteChar: '', depth: 0, current: '', parts: [] as string[] };
+  const state = {
+    quoteChar: '',
+    depth: 0,
+    current: '',
+    parts: [] as string[],
+    isLineComment: false,
+  };
 
   for (let i = 0; i < str.length; i++) {
     processChar(str[i], str, i, state, delimiter);
