@@ -10,6 +10,7 @@ export const processChar = (
     current: string;
     parts: string[];
     isLineComment?: boolean;
+    shouldTrim?: boolean;
   },
   delimiter: string,
 ) => {
@@ -59,7 +60,7 @@ export const processChar = (
 
   // Split by the delimiter only if we are at the top level (depth 0)
   if (char === delimiter && state.depth === 0) {
-    state.parts.push(state.current.trim());
+    state.parts.push(state.shouldTrim ? state.current.trim() : state.current);
     state.current = '';
     return;
   }

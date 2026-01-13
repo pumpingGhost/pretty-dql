@@ -105,3 +105,23 @@ process.failure_rate_per_minute = sum(process.failure_rate_per_minute) }
 | fields id,idOld, messaging.destination.name, messaging.system, dt.entity.service, entity, receive.rate_per_minute, publish.rate_per_minute, process.rate_per_minute, process.failure_rate
 | sort process.failure_rate desc
 | summarize countDistinctExact(id), countDistinctExact(idOld), count()`;
+
+export const newlines = `
+fetch spans, from: -30m, samplingRatio: 1000, scanLimitGBytes: 50
+
+
+  // based on the applied filters
+
+
+
+// only show outgoing calls for filtered traces
+
+| fieldsAdd sampling.probability = (power(2, 56) - coalesce(sampling.threshold, 0)) * power(2, -56) // comment
+// only show outgoing calls for filtered traces
+
+| fieldsAdd sampling.multiplicity = 1/sampling.probability
+
+
+
+
+| fieldsAdd multiplicity = coalesce(sampling.multiplicity, 1) * coalesce(aggregation.count, 1) * dt.system.sampling_ratio`;

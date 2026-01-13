@@ -1,6 +1,14 @@
 import { formatDql } from '../src';
 // @ts-ignore
-import { join, fetch, normalArguments, semanticArguments, nestedJoin, timeseries } from './integrationQueries';
+import {
+  join,
+  fetch,
+  normalArguments,
+  semanticArguments,
+  nestedJoin,
+  timeseries,
+  newlines,
+} from './integrationQueries';
 
 describe('Demo Integration Tests', () => {
   test('join', () => {
@@ -92,5 +100,21 @@ describe('Demo Integration Tests', () => {
         lifetimeEndMillis = unixMillisFromTimestamp(lifetime[end]),
         customIconPath = customIconPath,
         icon = icon[primaryIconType])`);
+  });
+
+  test('newlines', () => {
+    const formatted = formatDql(newlines);
+    expect(formatted).toContain(`fetch spans, from: -30m, samplingRatio: 1000, scanLimitGBytes: 50
+
+  // based on the applied filters
+
+// only show outgoing calls for filtered traces
+
+| fieldsAdd sampling.probability = (power(2, 56) - coalesce(sampling.threshold, 0)) * power(2, -56) // comment
+// only show outgoing calls for filtered traces
+
+| fieldsAdd sampling.multiplicity = 1/sampling.probability
+
+| fieldsAdd multiplicity = coalesce(sampling.multiplicity, 1) * coalesce(aggregation.count, 1) * dt.system.sampling_ratio`);
   });
 });

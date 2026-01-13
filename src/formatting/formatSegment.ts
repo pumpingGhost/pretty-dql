@@ -40,20 +40,40 @@ export const formatSegment = (seg: string): string => {
       i++;
       while (i < seg.length) {
         const c = seg[i];
-        commentContent += c;
         if (c === '\n' || c === '\r') {
-          i++;
           break;
         }
+        commentContent += c;
         i++;
       }
       current.currentPart += commentContent;
-      // If we hit newline, loop will continue, incrementing i if not careful
-      // The while loop consumes the newline? Yes: commentContent += c; i++.
-      // But outer loop also has logic?
-      // Wait, outer loop is while (i < seg.length).
-      // Here we incremented i. So next iteration resumes after newline.
-      // But if we consumed newline, we are good.
+      continue;
+    }
+
+    // Handle newlines (merge multiple)
+    if (char === '\n' || char === '\r') {
+      current.currentPart = current.currentPart.replace(/[ \t]+$/, '');
+      let newlineCount = 0;
+      let lastIndent = '';
+
+      while (i < seg.length && /\s/.test(seg[i])) {
+        const c = seg[i];
+        if (c === '\n' || c === '\r') {
+          if (c === '\r' && i + 1 < seg.length && seg[i + 1] === '\n') {
+            i++;
+          }
+          newlineCount++;
+          lastIndent = ''; // Reset indent on new line
+        } else {
+          lastIndent += c;
+        }
+        i++;
+      }
+      if (newlineCount > 1) {
+        current.currentPart += '\n\n' + lastIndent;
+      } else {
+        current.currentPart += '\n' + lastIndent;
+      }
       continue;
     }
 

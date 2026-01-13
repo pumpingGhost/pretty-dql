@@ -3,6 +3,7 @@ import { applyFormattingToCode } from './applyFormattingToCode';
 import { DQL_ROOT_COMMANDS } from '../constants/dqlRootCommands.constant';
 
 export const formatCommand = (cmdStr: string, index: number): string => {
+  const hasTrailingBlankLine = /(\r?\n\s*){2,}$/.test(cmdStr);
   const p = cmdStr.trim();
   if (p.length === 0) {
     return '';
@@ -16,7 +17,8 @@ export const formatCommand = (cmdStr: string, index: number): string => {
 
   // Check if the command name is valid (alphanumeric), otherwise we just format the whole string
   if (!/^\w+$/.test(commandName)) {
-    return prefix + applyFormattingToCode(p);
+    const res = prefix + applyFormattingToCode(p);
+    return hasTrailingBlankLine ? res + '\n' : res;
   }
 
   // Split the arguments by comma
@@ -25,6 +27,8 @@ export const formatCommand = (cmdStr: string, index: number): string => {
 
   const isRootCommand = DQL_ROOT_COMMANDS.includes(commandName);
   const hasBrackets = formattedArgs.some((arg) => /^\s*[\{\[]/.test(arg));
+
+  let formattedCommand: string;
 
   if (formattedArgs.length > 1 && (index > 0 || !isRootCommand || hasBrackets)) {
     // Indent the arguments if there are multiple and it's not the first command
@@ -45,6 +49,9 @@ export const formatCommand = (cmdStr: string, index: number): string => {
       let indentedArg: string;
 
       // Special handling for the last argument to prevent indenting trailing comments
+      // Trailing comments (starting with //) or blank lines at the end of the argument
+      // should likely NOT be indented with the argument comma-list indentation, because
+      // they are usually "next command" comments or spacing that belongs to the root level.
       if (i === formattedArgs.length - 1) {
         const lines = arg.split('\n');
         let pivotIndex = lines.length;
@@ -56,19 +63,16 @@ export const formatCommand = (cmdStr: string, index: number): string => {
           if (line.length === 0 || line.startsWith('//')) {
             pivotIndex = j;
           } else {
-            // Found non-comment, non-empty code lines. Stop.
             break;
           }
         }
 
         if (pivotIndex < lines.length && pivotIndex > 0) {
-          // We found a trailing block
           const mainPart = lines.slice(0, pivotIndex).join('\n');
           const trailingPart = lines.slice(pivotIndex).join('\n');
 
           const indentedMain = mainPart.replace(/\n/g, '\n' + myIndent);
-          // Trailing part: preserve structure but don't add myIndent.
-          // We simply join it back with newline, effectively resetting indentation to start of line.
+          // Trailing part: preserve structure.
           indentedArg = indentedMain + '\n' + trailingPart;
         } else {
           // No special trailing block or entire arg is trailing junk
@@ -85,9 +89,11 @@ export const formatCommand = (cmdStr: string, index: number): string => {
       return '\n' + myIndent + indentedArg;
     });
 
-    return prefix + commandName + ' ' + processedArgs.join(',');
+    formattedCommand = prefix + commandName + ' ' + processedArgs.join(',');
   } else {
     const joinedArgs = formattedArgs.join(', ');
-    return prefix + commandName + (joinedArgs ? ' ' + joinedArgs : '');
+    formattedCommand = prefix + commandName + (joinedArgs ? ' ' + joinedArgs : '');
   }
+
+  return hasTrailingBlankLine ? formattedCommand + '\n' : formattedCommand;
 };

@@ -100,4 +100,26 @@ describe('formatSegment', () => {
     expect(formatSegment('a!=b')).toBe('a != b');
     expect(formatSegment('a<=b')).toBe('a <= b');
   });
+
+  it('should merge multiple newlines into max one empty line', () => {
+    expect(formatSegment('a\n\n\nb')).toBe('a\n\nb');
+    expect(formatSegment('a\n\n\n\n\nb')).toBe('a\n\nb');
+  });
+
+  it('should preserve indentation after merged newlines', () => {
+    expect(formatSegment('a\n\n\n  b')).toBe('a\n\n  b');
+  });
+
+  it('should format single-line curly brackets with spaces', () => {
+    expect(formatSegment('{a}')).toBe('{ a }');
+  });
+
+  it('should format single-line square brackets without spaces for single item', () => {
+    expect(formatSegment('[a]')).toBe('[a]');
+  });
+
+  it('should format empty brackets correctly', () => {
+    expect(formatSegment('[]')).toBe('[]');
+    expect(formatSegment('{}')).toBe('{  }');
+  });
 });

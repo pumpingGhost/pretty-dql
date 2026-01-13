@@ -18,6 +18,7 @@ A simple and efficient DQL (Dynatrace Query Language) formatter.
 - Aligns subsequent arguments of a command with the first argument, which is kept on the same line as the command.
 - Indents "semantic" arguments (arguments starting with `key:`) by 2 spaces from the command start, instead of aligning with the first argument.
 - Ensures every math operator like `=` is surrounded by exactly one space (handles `=`, `==`, `!=`, `<=`, `>=`).
+- Collapses multiple successive newlines into a single newline.
 
 ## Usage
 
