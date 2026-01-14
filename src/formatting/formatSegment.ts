@@ -18,7 +18,7 @@ export const formatSegment = (seg: string): string => {
     const current = stack[stack.length - 1];
 
     // Handle quotes
-    if ('"\'`'.includes(char)) {
+    if ('"\'`'.includes(char) && !isEscaped(seg, i)) {
       const quoteChar = char;
       let quoteContent = char;
       i++;
