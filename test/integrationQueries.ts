@@ -125,3 +125,35 @@ fetch spans, from: -30m, samplingRatio: 1000, scanLimitGBytes: 50
 
 
 | fieldsAdd multiplicity = coalesce(sampling.multiplicity, 1) * coalesce(aggregation.count, 1) * dt.system.sampling_ratio`;
+
+export const recordInCurlyBrackets = `| fieldsAdd requestCount_recent_rec = record({timeseries = requestCount_timeseries, value = requestCount_recent, isRecentValue = true })`;
+
+export const record = `| fieldsAdd requestCount_recent_rec = record( timeseries = requestCount_timeseries, 
+            value = requestCount_recent, isRecentValue = true)`;
+
+export const simpleJoin = `| join [
+       a,
+       b
+       ]`;
+
+export const joinWithMultipleCommands = `| join [
+       fetch spans
+       | fieldsAdd x,
+       y,
+       z
+       ]`;
+
+export const nestedJoin2 = `fetch spans, samplingRatio: 1
+| join [
+      fetch spans
+      | fieldsAdd dt.entity.service
+      | fields id = dt.entity.service,
+               entityName(dt.entity.service)
+      | join [
+            fetch spans
+            | fieldsAdd span.id,
+                        parentId = span.parent_id
+          ],
+          on: { left[ span.id ] == right[ parentId ] }
+    ],
+    on: { left[ dt.entity.service ] == right[ id ] }`;

@@ -8,6 +8,10 @@ import {
   nestedJoin,
   timeseries,
   newlines,
+  recordInCurlyBrackets,
+  record,
+  simpleJoin,
+  nestedJoin2,
 } from './integrationQueries';
 
 describe('Demo Integration Tests', () => {
@@ -73,6 +77,25 @@ describe('Demo Integration Tests', () => {
     expect(formatted).toContain(']');
   });
 
+  test('nestedJoin2', () => {
+    const formatted = formatDql(nestedJoin2);
+    const expected = `fetch spans, samplingRatio: 1
+| join [
+      fetch spans
+      | fieldsAdd dt.entity.service
+      | fields id = dt.entity.service,
+               entityName(dt.entity.service)
+      | join [
+            fetch spans
+            | fieldsAdd span.id,
+                        parentId = span.parent_id
+          ],
+          on: { left[span.id] == right[parentId] }
+    ],
+    on: { left[dt.entity.service] == right[id] }`;
+    expect(formatted).toBe(expected);
+  });
+
   test('timeseries', () => {
     const formatted = formatDql(timeseries);
     expect(formatted).toContain('timeseries {');
@@ -128,5 +151,24 @@ describe('Demo Integration Tests', () => {
     const input = `| filter matchesValue(\`url\`, "test") | nextCommand`;
     const expected = `| filter matchesValue(\`url\`, "test")\n| nextCommand`;
     expect(formatDql(input)).toBe(expected);
+  });
+
+  test('recordInCurlyBrackets', () => {
+    const formatted = formatDql(recordInCurlyBrackets);
+    expect(formatted).toBe(
+      `| fieldsAdd requestCount_recent_rec = record({\n  timeseries = requestCount_timeseries, value = requestCount_recent, isRecentValue = true\n})`,
+    );
+  });
+
+  test('record', () => {
+    const formatted = formatDql(record);
+    expect(formatted).toBe(
+      `| fieldsAdd requestCount_recent_rec = record( timeseries = requestCount_timeseries,\n            value = requestCount_recent, isRecentValue = true)`,
+    );
+  });
+
+  test('simpleJoin', () => {
+    const formatted = formatDql(simpleJoin);
+    expect(formatted).toBe(`| join [\n  a,\n  b\n]`);
   });
 });
