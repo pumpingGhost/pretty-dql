@@ -12,6 +12,8 @@ import {
   record,
   simpleJoin,
   nestedJoin2,
+  bigQuery,
+  bigQueryExpected,
 } from './integrationQueries';
 
 describe('Demo Integration Tests', () => {
@@ -170,5 +172,10 @@ describe('Demo Integration Tests', () => {
   test('simpleJoin', () => {
     const formatted = formatDql(simpleJoin);
     expect(formatted).toBe(`| join [\n  a,\n  b\n]`);
+  });
+
+  test('bigQuery', () => {
+    const formatted = formatDql(bigQuery);
+    expect(formatted).toBe(bigQueryExpected);
   });
 });
