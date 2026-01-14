@@ -117,4 +117,16 @@ describe('Demo Integration Tests', () => {
 
 | fieldsAdd multiplicity = coalesce(sampling.multiplicity, 1) * coalesce(aggregation.count, 1) * dt.system.sampling_ratio`);
   });
+
+  test('handles escaped backticks correctly for top-level commands', () => {
+    const input = `| filter matchesValue(\`url\`, "oteldemo.CurrencyService") fetch spans`;
+    const expected = `| filter matchesValue(\`url\`, "oteldemo.CurrencyService") fetch spans`;
+    expect(formatDql(input)).toBe(expected);
+  });
+
+  test('handles escaped backticks correctly for commands', () => {
+    const input = `| filter matchesValue(\`url\`, "test") | nextCommand`;
+    const expected = `| filter matchesValue(\`url\`, "test")\n| nextCommand`;
+    expect(formatDql(input)).toBe(expected);
+  });
 });

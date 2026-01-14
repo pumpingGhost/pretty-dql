@@ -41,4 +41,15 @@ describe('processChar', () => {
     expect(state.isLineComment).toBe(false);
     expect(state.current).toBe('//\n');
   });
+
+  it('should treat escaped quotes as regular characters', () => {
+    const state = { quoteChar: '', depth: 0, current: '', parts: [] as string[] };
+    // Test input: `\`
+    // We are processing the backtick at index 1.
+    // The previous char at index 0 is backslash.
+    const text = '\\`';
+    processChar('`', text, 1, state, ',');
+    expect(state.quoteChar).toBe('');
+    expect(state.current).toBe('`');
+  });
 });

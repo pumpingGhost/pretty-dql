@@ -51,17 +51,19 @@ export const tokenizeByQuotes = (text: string): string[] => {
         current = '';
       }
       inTemplateVar = true;
-      current += char;
+      braceDepth = 1;
+      current += '${';
+      i++;
       continue;
     }
 
-    if (char === '"' || char === "'" || char === '`') {
-      // We found a start of a quoted string, so we push the previous segment
+    if ('"\'`'.includes(char) && !isEscaped(text, i)) {
       if (current) {
         segments.push(current);
+        current = '';
       }
       quoteChar = char;
-      current = char;
+      current += char;
       continue;
     }
 

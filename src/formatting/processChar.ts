@@ -39,7 +39,7 @@ export const processChar = (
     return;
   }
 
-  if (char === '"' || char === "'" || char === '`') {
+  if ('"\'`'.includes(char) && !isEscaped(str, index)) {
     state.quoteChar = char;
     state.current += char;
     return;

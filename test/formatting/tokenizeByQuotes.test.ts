@@ -12,4 +12,9 @@ describe('tokenizeByQuotes', () => {
   it('should handle escaped quotes', () => {
     expect(tokenizeByQuotes('a "b\\"c" d')).toEqual(['a ', '"b\\"c"', ' d']);
   });
+
+  it('should ignore escaped quotes when starting a segment', () => {
+    // Escaped quote should not start a quoted segment
+    expect(tokenizeByQuotes('a \\"b\\" c')).toEqual(['a \\"b\\" c']);
+  });
 });
